@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#020712">
+<meta name="color-scheme" content="dark">
+<title>NORM E.MATH I</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<style>
+  :root{
+    --ink:#020712; --ink-2:#061326; --panel:rgba(7,22,43,.84); --panel-solid:#08172d; --line:rgba(39,196,255,.25);
+    --text:#F7FCFF; --text-dim:rgba(230,244,255,.72); --text-faint:rgba(201,226,244,.48);
+    --cyan:#20D9FF; --cyan-lt:#7CEBFF; --cyan-dk:#008FE0; --blue:#147BFF; --blue-lt:#55A7FF;
+    --steel:#147BFF; --steel-lt:#55A7FF;
+    --green:#22c55e; --green-bg:rgba(34,197,94,.13); --red:#f4614f; --red-bg:rgba(244,97,79,.13);
+    --shadow: 0 2px 16px rgba(0,0,0,.35); --shadow-lg: 0 18px 50px rgba(0,0,0,.5);
+  }
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    :root{ --panel:#08172d; }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color:transparent; }
+  html { scroll-behavior:auto; -webkit-text-size-adjust:100%; text-size-adjust:100%; }
+  html, body { overflow-x:hidden; max-width:100%; }
+  body {
+    font-family:'Kanit','Sarabun','Tahoma',sans-serif; width:100%; max-width:960px; margin:0 auto; padding:clamp(12px,3vw,24px) clamp(10px,4vw,22px) 76px;
+    background:
+      radial-gradient(circle at 50% -8%, rgba(20,123,255,.22) 0%, transparent 36%),
+      radial-gradient(circle at 100% 8%, rgba(32,217,255,.12) 0%, transparent 32%),
+      linear-gradient(180deg,#01050d 0%,#020b19 55%,#031022 100%);
+    color:var(--text); position:relative; min-height:100vh; overflow-wrap:anywhere; word-break:break-word;
+  }
+  ::selection{ background:var(--cyan-lt); color:#1a1204; }
+  .mono{ font-family:'JetBrains Mono',monospace; }
+
+  /* ===== Header / masthead ===== */
+  .masthead{
+    border:1px solid var(--line); border-radius:14px; padding:26px 24px 22px;
+    background:linear-gradient(180deg, rgba(32,217,255,.06), transparent 60%), var(--panel-solid);
+    margin-bottom:16px; box-shadow:var(--shadow);
+  }
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace; font-size:.72em; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--cyan); display:flex; align-items:center; gap:8px; margin-bottom:10px;
+  }
+  .eyebrow::before{ content:''; width:16px; height:2px; background:var(--cyan); display:inline-block; }
+  .masthead h1{ margin:0 0 8px; font-size:1.85em; font-weight:800; letter-spacing:.01em; color:var(--text); line-height:1.25; }
+  .masthead .subtitle{ margin:0; color:var(--text-dim); font-size:.95em; font-weight:300; line-height:1.65; max-width:600px; }
+
+  /* ===== Control bar: progress + teach-mode toggle ===== */
+  .control-bar{
+    display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;
+    border:1px solid var(--line); border-radius:12px; padding:12px 16px; margin-bottom:18px;
+    background:var(--panel); -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); box-shadow:var(--shadow);
+  }
+  .progress-info{ display:flex; align-items:center; gap:12px; min-width:0; flex:1; }
+  .progress-label{ font-size:.85em; color:var(--text-dim); white-space:nowrap; }
+  .progress-track{ flex:1; min-width:60px; max-width:180px; background:#262a37; border-radius:6px; height:6px; overflow:hidden; }
+  .progress-fill{ background:linear-gradient(90deg,var(--blue),var(--cyan)); height:100%; transition:width .4s; }
+  .progress-num{ font-family:'JetBrains Mono',monospace; font-size:.82em; color:var(--cyan-lt); white-space:nowrap; }
+
+  .teach-toggle{ display:flex; align-items:center; gap:9px; cursor:pointer; user-select:none; flex-shrink:0; }
+  .teach-toggle span.lbl{ font-size:.85em; color:var(--text-dim); }
+  .switch{ position:relative; width:40px; height:22px; border-radius:12px; background:#2b3040; transition:background .2s; flex-shrink:0; }
+  .switch::after{ content:''; position:absolute; top:2px; left:2px; width:18px; height:18px; border-radius:50%; background:var(--text-faint); transition:transform .2s, background .2s; }
+  .switch.on{ background:rgba(32,217,255,.35); }
+  .switch.on::after{ transform:translateX(18px); background:var(--cyan); }
+
+  /* ===== Chapter list (syllabus style) ===== */
+  .chapter-list{ display:flex; flex-direction:column; gap:10px; }
+  .chapter-row{
+    display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:16px;
+    background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:14px 18px;
+    transition:border-color .15s, background .15s; -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
+  }
+  .chapter-row:hover{ border-color:rgba(32,217,255,.5); background:rgba(24,27,36,.9); }
+  .chapter-idx{ font-family:'JetBrains Mono',monospace; font-size:.95em; color:var(--cyan); font-weight:700; min-width:26px; }
+  .chapter-main h3{ margin:0 0 3px; color:var(--text); font-size:1.03em; font-weight:600; line-height:1.35; }
+  .chapter-meta{ margin:0; color:var(--text-faint); font-size:.82em; }
+  .chapter-score{ font-size:.78em; color:var(--blue-lt); margin-top:4px; font-family:'JetBrains Mono',monospace; }
+  .chapter-action{ text-align:right; }
+
+  .btn {
+    touch-action:manipulation;
+    -webkit-user-select:none; user-select:none;
+    background:linear-gradient(135deg,var(--blue),var(--cyan)); color:#00111b; border:none; padding:9px 18px;
+    border-radius:8px; font-size:.92em; font-family:inherit; font-weight:600; cursor:pointer; transition:transform .12s, box-shadow .12s, background .12s;
+    white-space:nowrap;
+  }
+  .btn:hover{ background:var(--cyan-lt); transform:translateY(-1px); }
+  .btn:active{ transform:translateY(0); }
+  .btn.secondary { background:transparent; color:var(--cyan-lt); border:1px solid rgba(32,217,255,.4); }
+  .btn.secondary:hover { background:rgba(32,217,255,.1); }
+  .btn.ghost{ background:transparent; color:var(--text-dim); border:1px solid rgba(237,239,243,.18); }
+  .btn.ghost:hover{ border-color:rgba(237,239,243,.4); color:var(--text); }
+
+  .back-link{ display:inline-flex; align-items:center; gap:6px; margin-bottom:14px; color:var(--blue-lt); text-decoration:none; font-size:.88em; cursor:pointer; }
+  .back-button{ appearance:none; -webkit-appearance:none; background:none; border:0; padding:0; font:inherit; text-align:left; }
+  .back-button:focus-visible{ outline:2px solid var(--hud-cyan-2); outline-offset:4px; border-radius:4px; }
+  .back-link:hover{ text-decoration:underline; }
+
+  h2 { color:var(--text); margin-top:32px; margin-bottom:14px; border-left:3px solid var(--cyan); padding-left:12px; font-size:1.12em; font-weight:700; }
+  .section-note{ margin:-6px 0 16px 15px; color:var(--text-faint); font-size:.84em; }
+
+  /* ===== Lesson (teaching mode) ===== */
+  .lesson-box{
+    border:1px solid var(--line); border-radius:14px; background:linear-gradient(180deg, rgba(32,217,255,.05), transparent 50%), var(--panel-solid);
+    margin-bottom:22px; overflow:hidden; box-shadow:var(--shadow);
+  }
+  .lesson-head{
+    display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px 18px; cursor:pointer;
+  }
+  .lesson-head-title{ display:flex; align-items:center; gap:10px; }
+  .lesson-tag{
+    font-family:'JetBrains Mono',monospace; font-size:.68em; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--cyan); border:1px solid rgba(32,217,255,.4); border-radius:5px; padding:3px 8px;
+  }
+  .lesson-head h4{ margin:0; font-size:1em; color:var(--text); font-weight:600; }
+  .lesson-chevron{ color:var(--text-faint); transition:transform .2s; font-size:.85em; }
+  .lesson-box.collapsed .lesson-chevron{ transform:rotate(-90deg); }
+  .lesson-body{ padding:0 20px 20px; line-height:1.75; }
+
+  .lesson-concept{ color:var(--text-dim); font-size:.94em; margin:0 0 16px; }
+  .lesson-sub{ font-size:.78em; letter-spacing:.06em; text-transform:uppercase; color:var(--blue-lt); font-weight:600; margin:16px 0 8px; }
+  .lesson-sub:first-of-type{ margin-top:0; }
+  .formula-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px; }
+  .formula-list li{ background:rgba(20,123,255,.08); border:1px solid rgba(20,123,255,.22); border-radius:8px; padding:9px 13px; font-size:.92em; color:var(--text); }
+  .method-list{ margin:0; padding-left:0; list-style:none; counter-reset:step; display:flex; flex-direction:column; gap:8px; }
+  .method-list li{ counter-increment:step; padding-left:30px; position:relative; font-size:.92em; color:var(--text-dim); }
+  .method-list li::before{
+    content:counter(step); position:absolute; left:0; top:0; width:20px; height:20px; border-radius:5px;
+    background:rgba(32,217,255,.14); border:1px solid rgba(32,217,255,.4); color:var(--cyan-lt);
+    font-family:'JetBrains Mono',monospace; font-size:.72em; font-weight:700; display:flex; align-items:center; justify-content:center;
+  }
+  .worked-example{ background:rgba(34,197,94,.06); border:1px dashed rgba(34,197,94,.35); border-radius:10px; padding:14px 16px; font-size:.92em; }
+  .worked-example .ex-prompt{ color:var(--text); font-weight:500; margin:0 0 8px; }
+  .worked-example .ex-solution{ color:var(--text-dim); margin:0; line-height:1.8; }
+  .pitfall-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:7px; }
+  .pitfall-list li{ padding-left:22px; position:relative; font-size:.9em; color:var(--text-dim); }
+  .pitfall-list li::before{ content:'!'; position:absolute; left:0; top:-1px; color:var(--red); font-weight:800; font-size:.95em; }
+
+  /* ===== Questions ===== */
+  .question { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:16px 20px; margin-bottom:12px; transition:background .25s, border-color .25s; -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); overflow:visible; }
+  .question.correct { background:var(--green-bg); border-color:rgba(34,197,94,.5); }
+  .question.wrong { background:var(--red-bg); border-color:rgba(244,97,79,.5); }
+  .qtext { font-weight:500; margin-bottom:10px; line-height:1.7; color:var(--text); }
+  .choices label {
+    display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:8px; cursor:pointer; transition:background .15s;
+    border:1px solid transparent; min-height:44px; touch-action:manipulation; line-height:1.5; color:var(--text-dim);
+  }
+  .choices input[type=radio] { flex-shrink:0; width:18px; height:18px; accent-color:var(--cyan); }
+  .choices.locked label { cursor:default; }
+  .choices label:hover:not(.locked *) { background:rgba(32,217,255,.08); }
+  .choices input[disabled] { pointer-events:none; }
+  .choices label.pick-correct { background:var(--green-bg); border-color:rgba(34,197,94,.5); font-weight:600; color:var(--text); }
+  .choices label.pick-wrong { background:var(--red-bg); border-color:rgba(244,97,79,.5); color:var(--text); }
+  .mcq-explain {
+    display:none; margin-top:12px; background:rgba(20,123,255,.08); border-left:3px solid var(--steel); border-radius:8px; padding:10px 14px;
+    font-size:.9em; line-height:1.7; color:var(--text-dim);
+  }
+  .mcq-explain b { color:var(--blue-lt); }
+  .question.correct .mcq-explain, .question.wrong .mcq-explain { display:block; }
+
+  .essay textarea { width:100%; min-height:80px; box-sizing:border-box; border:1px solid rgba(32,217,255,.25); border-radius:8px; padding:10px; font-family:inherit; font-size:16px; resize:vertical; background:rgba(0,0,0,.25); color:var(--text); }
+  .essay textarea:focus{ outline:2px solid rgba(32,217,255,.4); border-color:var(--cyan); }
+  .points { color:var(--cyan-lt); font-weight:600; font-size:.88em; }
+  .answer-key {
+    display:none; background:rgba(32,217,255,.06); border:1px dashed rgba(32,217,255,.4); border-radius:10px; padding:14px 18px; margin-top:10px;
+    line-height:1.8; font-size:.93em; color:var(--text-dim);
+  }
+
+  .result-hero {
+    text-align:center; background:var(--panel-solid); border:1px solid var(--line); border-radius:16px; padding:32px 22px;
+    margin-bottom:20px; box-shadow:var(--shadow-lg);
+  }
+  .result-title { font-size:1.35em; font-weight:700; color:var(--text); margin-bottom:6px; }
+  .result-score { font-size:1em; color:var(--text-dim); margin-bottom:14px; }
+  .result-msg{ color:var(--text-dim); font-size:.94em; max-width:460px; margin:0 auto; line-height:1.7; }
+  .nav-row{ display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:18px; }
+  .toast { position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:var(--panel-solid); border:1px solid var(--line); color:var(--text); padding:10px 20px; border-radius:10px; box-shadow:var(--shadow-lg); font-size:.88em; z-index:100; animation:toastIn .3s ease, toastOut .3s ease 1.7s; opacity:0; }
+  @keyframes toastIn{ from{opacity:0; transform:translate(-50%,20px);} to{opacity:1; transform:translate(-50%,0);} }
+  @keyframes toastOut{ from{opacity:1;} to{opacity:0;} }
+  .katex{ font-size:1.02em; }
+  @media (max-width:480px){
+    .masthead h1{font-size:1.5em;} .masthead{padding:20px 18px;}
+    .chapter-row{ grid-template-columns:auto 1fr; }
+    .chapter-action{ grid-column:1 / -1; text-align:left; margin-top:4px; }
+  }
+
+  .lesson-intro,.lesson-theory,.lesson-recognize,.lesson-exam,.lesson-memory{border-radius:12px;padding:14px 16px;margin:0 0 14px;line-height:1.9;font-size:.95em}
+  .lesson-intro{background:linear-gradient(135deg,rgba(20,123,255,.12),rgba(32,217,255,.05));border:1px solid rgba(32,217,255,.22)}
+  .lesson-theory{background:rgba(20,123,255,.055);border-left:3px solid var(--blue)}
+  .lesson-recognize{background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.08)}
+  .lesson-exam{background:rgba(32,217,255,.055);border:1px solid rgba(32,217,255,.16)}
+  .lesson-memory{background:linear-gradient(135deg,rgba(32,217,255,.09),rgba(20,123,255,.06));border:1px solid rgba(32,217,255,.25);font-weight:600}
+  .deep-example{background:rgba(255,255,255,.025);border:1px solid rgba(32,217,255,.16);border-radius:12px;padding:15px 16px;margin:10px 0;overflow:hidden}
+  .deep-example h5{margin:0 0 8px;color:var(--cyan-lt);font-size:.95em}
+  .deep-example .deep-prompt{margin:0 0 10px;color:var(--text);line-height:1.8}
+  .deep-example .deep-solution{margin:0;color:var(--text-dim);line-height:1.95}
+  .deep-answer{margin-top:10px;padding:9px 12px;border-radius:8px;background:rgba(32,217,255,.08);color:var(--white);font-weight:600}
+  .lesson-body .katex-display{overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;overscroll-behavior-y:auto;padding:5px 0 9px}
+  .btn{min-height:44px}
+  textarea{font-size:16px!important;max-width:100%}
+  @media(max-width:760px){
+    body{max-width:none}.progress-info{width:100%;flex-basis:100%}.progress-track{max-width:none}
+    .teach-toggle{width:100%;justify-content:space-between}.chapter-row{grid-template-columns:auto 1fr;gap:10px 12px}
+    .chapter-action{grid-column:1/-1;text-align:left}.lesson-body{padding:0 14px 18px}.question{padding:14px}
+  }
+  @media(max-width:480px){
+    body{padding-left:10px;padding-right:10px}.masthead h1{font-size:clamp(1.35rem,7vw,1.7rem)}
+    .chapter-row{grid-template-columns:32px 1fr}.lesson-head{padding:13px 14px}.lesson-head h4{font-size:.9rem}
+    .choices label{min-height:48px;padding:11px 9px}.nav-row{flex-direction:column}.nav-row .btn{width:100%}
+  }
+  @media(max-width:360px){.masthead{padding:18px 14px}.eyebrow{font-size:.62em}}
+  @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}.btn .ripple{display:none!important}}
+
+  .stage-finish{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:22px 0;padding:16px;border:1px solid rgba(32,217,255,.28);border-radius:12px;background:linear-gradient(135deg,rgba(20,123,255,.10),rgba(32,217,255,.04));}
+  .stage-finish strong{color:var(--text);font-size:.98rem}.stage-finish p{margin:4px 0 0;color:var(--text-faint);font-size:.8rem;line-height:1.6}
+  .practice-card{width:100%;text-align:left;font:inherit;color:inherit;cursor:pointer}
+  @media(max-width:600px){.stage-finish{flex-direction:column;align-items:stretch}.stage-finish .btn{width:100%}}
+
+  .math-fallback{font-family:'JetBrains Mono','Consolas','Cascadia Mono',monospace;color:var(--text);white-space:pre-wrap;overflow-wrap:anywhere}
+  .math-fallback.math-display{display:block;margin:.35rem 0;padding:.5rem .65rem;border-left:2px solid rgba(32,217,255,.35);background:rgba(20,123,255,.045);border-radius:6px;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;overscroll-behavior-y:auto;white-space:pre;}
+  .math-inline{font-family:'JetBrains Mono','Consolas','Cascadia Mono',monospace;color:var(--text)}
+  .assignment-card{font:inherit;text-align:left;width:100%;appearance:none;-webkit-appearance:none}
+  .assignment-card:focus-visible{outline:3px solid rgba(124,235,255,.55);outline-offset:2px}
+  .lesson-head:focus-visible{outline:3px solid rgba(124,235,255,.55);outline-offset:-3px}
+  .choices label{cursor:pointer;touch-action:manipulation}
+  .choices input{accent-color:var(--cyan);min-width:18px;min-height:18px}
+  textarea{font-family:'Kanit','Sarabun','Tahoma',sans-serif;resize:vertical;min-height:150px}
+  .mcq-explain{overflow-wrap:anywhere}
+  .katex{font-size:1.04em}
+  .katex-display{margin:.65em 0;max-width:100%;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;overscroll-behavior-y:auto;-webkit-overflow-scrolling:touch}
+  @media(max-width:600px){
+    .masthead{padding:20px 16px 18px}.masthead h1{font-size:1.5em}
+    .control-bar{padding:10px 12px;gap:10px}.progress-info{width:100%;flex-basis:100%}
+    .mode-switcher{width:100%}.mode-btn{flex:1;min-width:0;font-size:.76rem}
+    .chapter-row{grid-template-columns:auto 1fr;gap:10px;padding:12px}.chapter-action{grid-column:1 / -1;text-align:stretch}.chapter-action .btn{width:100%}
+    .lesson-head{padding:12px 14px}.lesson-head-title{align-items:flex-start}.lesson-tag{flex-shrink:0}.lesson-collapse-btn{min-height:42px}
+    .lesson-body{padding:0 14px 16px}.pattern-grid,.cram-grid,.assignment-map-grid{grid-template-columns:1fr}
+    .question{padding:14px}.choices label{padding:11px 12px}
+    .nav-row{display:grid;grid-template-columns:1fr;gap:8px}.nav-row .btn{width:100%}
+  }
+  @media(max-width:360px){body{padding-left:8px;padding-right:8px}.mode-btn{font-size:.68rem;padding:8px 5px}.lesson-head{flex-direction:column;align-items:stretch}.lesson-collapse-btn{width:100%}}
+
+  @media print{body{max-width:none;background:#fff;color:#111;padding:0}.control-bar,.back-link,.chapter-action,.nav-row,button,textarea{display:none!important}.lesson-box.collapsed .lesson-body{display:block}}
+
+
+  .lesson-source,.lesson-writeup{border-radius:12px;padding:14px 16px;margin:0 0 14px;line-height:1.95;font-size:.94em}
+  .lesson-source{background:linear-gradient(135deg,rgba(20,123,255,.12),rgba(32,217,255,.07));border:1px solid rgba(32,217,255,.24);color:var(--text)}
+  .lesson-writeup{background:rgba(255,255,255,.028);border:1px dashed rgba(124,235,255,.28);color:var(--text-dim)}
+  .lesson-source strong,.lesson-writeup strong{color:var(--cyan-lt)}
+  .deep-example{line-height:1.95}
+  .deep-example .deep-solution{white-space:normal}
+  @media(max-width:600px){.lesson-source,.lesson-writeup,.lesson-intro,.lesson-theory,.lesson-recognize{padding:12px 13px;font-size:.91em}}
+
+
+  .exam-map{border:1px solid rgba(32,217,255,.25);border-radius:14px;padding:18px 18px 16px;margin:0 0 16px;background:linear-gradient(135deg,rgba(20,123,255,.10),rgba(32,217,255,.035));box-shadow:var(--shadow)}
+  .exam-map-kicker{font:600 .68rem 'JetBrains Mono',monospace;letter-spacing:.12em;color:var(--cyan);margin-bottom:7px}
+  .exam-map h2{font-size:1.08rem;margin:0 0 6px}.exam-map p{margin:0;color:var(--text-dim);line-height:1.8;font-size:.9rem}
+  .exam-map-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:12px}
+  .exam-map-grid span{border:1px solid rgba(32,217,255,.15);background:rgba(255,255,255,.025);border-radius:8px;padding:7px 8px;font:500 .65rem 'JetBrains Mono',monospace;color:var(--cyan-lt);text-align:center}
+  @media(max-width:620px){.exam-map-grid{grid-template-columns:repeat(2,1fr)}}
+
+
+  /* ===== Final responsive / accessible teaching controls ===== */
+  .control-bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;box-shadow:0 8px 24px rgba(0,0,0,.35);}
+  .teach-toggle{border:1px solid rgba(32,217,255,.25);background:rgba(32,217,255,.06);color:var(--text);padding:7px 10px;border-radius:10px;min-height:44px;}
+  .teach-toggle:focus-visible,.lesson-collapse-btn:focus-visible,.btn:focus-visible{outline:3px solid rgba(124,235,255,.65);outline-offset:2px;}
+  .teach-state{font-size:.75em;color:var(--cyan-lt);font-family:'JetBrains Mono',monospace;min-width:25px;}
+  .exam-badge{display:inline-block;margin-top:7px;padding:4px 8px;border-radius:6px;font-size:.72em;line-height:1.35;color:var(--cyan-lt);background:rgba(32,217,255,.08);border:1px solid rgba(32,217,255,.18);}
+  .exam-badge.embedded{color:#b8cfff;background:rgba(20,123,255,.09);border-color:rgba(20,123,255,.2);}
+  .exam-badge.direct-overlap{color:#d6e7ff;background:rgba(20,123,255,.08);border-color:rgba(20,123,255,.18);}
+  .lesson-head{cursor:default;}
+  .lesson-head-title{min-width:0;flex:1;}
+  .lesson-head-title>div{min-width:0;}
+  .lesson-head h4{line-height:1.35;}
+  .lesson-head-title p{margin:3px 0 0;color:var(--text-faint);font-size:.78em;line-height:1.45;}
+  .lesson-collapse-btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:44px;padding:8px 12px;border-radius:9px;border:1px solid rgba(32,217,255,.3);background:rgba(32,217,255,.06);color:var(--cyan-lt);font:600 .82em 'Kanit','Sarabun','Tahoma',sans-serif;cursor:pointer;flex-shrink:0;}
+  .lesson-collapse-btn:hover{background:rgba(32,217,255,.12);}
+  .lesson-chevron{transition:transform .2s;}
+  .lesson-box.collapsed .lesson-chevron{transform:rotate(-90deg);}
+  .lesson-body[hidden]{display:none!important;}
+  .lesson-focus{margin:0 0 16px;padding:12px 14px;border-radius:10px;background:linear-gradient(135deg,rgba(20,123,255,.12),rgba(32,217,255,.05));border:1px solid rgba(32,217,255,.22);font-size:.86em;line-height:1.75;color:var(--text-dim);}
+  .lesson-focus b{color:var(--cyan-lt);}
+  .lesson-focus span{color:var(--text-faint);}
+  .lesson-off-card{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:0 0 22px;padding:15px 17px;border:1px solid var(--line);border-radius:14px;background:var(--panel);box-shadow:var(--shadow);}
+  .lesson-off-card strong{display:block;margin:7px 0 3px;color:var(--text);}
+  .lesson-off-card p{margin:0;color:var(--text-faint);font-size:.82em;line-height:1.55;}
+  .lesson-footer-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:20px;padding-top:15px;border-top:1px solid rgba(32,217,255,.12);}
+  .lesson-footer-actions .btn{min-height:42px;}
+  .btn{min-height:44px;touch-action:manipulation;}
+  input,button,textarea,select{font:inherit;}
+  textarea{width:100%;min-height:120px;resize:vertical;}
+  .katex-display{max-width:100%;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;}
+  @media(max-width:760px){
+    body{min-height:100svh;padding-bottom:calc(72px + env(safe-area-inset-bottom));}
+    .control-bar{align-items:stretch;gap:9px;padding:10px 11px;}
+    .progress-info{width:100%;flex-basis:100%;}
+    .teach-toggle{width:100%;justify-content:center;}
+    .chapter-row{grid-template-columns:34px minmax(0,1fr);gap:9px 11px;padding:13px 14px;}
+    .chapter-action{grid-column:1/-1;text-align:stretch;}
+    .chapter-action .btn{width:100%;}
+    .lesson-head{align-items:flex-start;padding:13px 14px;}
+    .lesson-head-title{align-items:flex-start;}
+    .lesson-tag{flex-shrink:0;}
+    .lesson-collapse-btn{min-width:44px;padding:8px 10px;}
+    .lesson-btn-label{display:none;}
+    .lesson-body{padding:0 14px 17px;}
+    .lesson-off-card{align-items:stretch;flex-direction:column;}
+    .lesson-open-btn{width:100%;}
+  }
+  @media(max-width:480px){
+    body{padding-left:8px;padding-right:8px;}
+    .masthead{padding:20px 15px 18px;}
+    .masthead h1{font-size:clamp(1.3rem,7vw,1.65rem);}
+    .progress-label{font-size:.78em;}
+    .progress-num{font-size:.72em;}
+    .lesson-sub{font-size:.72em;}
+    .lesson-intro,.lesson-theory,.lesson-recognize,.lesson-exam,.lesson-memory,.lesson-focus{font-size:.9em;padding:12px 13px;}
+    .formula-list li,.method-list li,.deep-solution,.deep-prompt{font-size:.9em;}
+    .nav-row{flex-direction:column;}
+    .nav-row .btn{width:100%;}
+  }
+  @media(max-width:360px){
+    .lesson-head-title h4{font-size:.9em;}
+    .lesson-head-title p{display:none;}
+    .exam-badge{font-size:.67em;}
+  }
+  @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;}}
+
+
+  .home-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:0 0 16px}
+  .home-actions .btn{width:100%}
+  .mode-switcher{display:flex;gap:7px;flex-wrap:wrap}
+  .mode-btn{min-height:42px;padding:8px 12px;border-radius:9px;border:1px solid rgba(32,217,255,.22);background:rgba(255,255,255,.025);color:var(--text-dim);font:600 .78em 'Kanit','Sarabun','Tahoma',sans-serif;cursor:pointer;touch-action:manipulation}
+  .mode-btn.active{background:linear-gradient(135deg,rgba(20,123,255,.32),rgba(32,217,255,.18));color:var(--cyan-lt);border-color:rgba(32,217,255,.55)}
+  .mode-btn:focus-visible{outline:3px solid rgba(124,235,255,.55);outline-offset:2px}
+  .assignment-map{margin:0 0 20px;padding:16px;border:1px solid var(--line);border-radius:14px;background:rgba(7,22,43,.78)}
+  .assignment-map-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:12px}
+  .assignment-card{padding:12px;border:1px solid rgba(32,217,255,.17);border-radius:11px;background:rgba(255,255,255,.025);cursor:pointer;transition:.15s}
+  .assignment-card:hover{border-color:rgba(32,217,255,.5);transform:translateY(-1px)}
+  .assignment-card .a-top{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:6px}
+  .assignment-card .a-num{font:700 .72rem 'JetBrains Mono',monospace;color:var(--cyan)}
+  .assignment-card .a-count{font:600 .65rem 'JetBrains Mono',monospace;color:var(--blue-lt)}
+  .assignment-card h4{margin:0;color:var(--text);font-size:.9rem}.assignment-card p{margin:4px 0 0;color:var(--text-faint);font-size:.76rem;line-height:1.55}.assignment-card .related-chapters{color:var(--blue-lt);font-size:.7rem;margin-top:7px}
+  .assignment-detail{padding:15px;border:1px solid rgba(32,217,255,.2);border-radius:13px;background:linear-gradient(135deg,rgba(20,123,255,.08),rgba(32,217,255,.03));margin-bottom:18px}
+  .assignment-item{padding:12px 0;border-bottom:1px solid rgba(255,255,255,.07)}.assignment-item:last-child{border-bottom:0}
+  .assignment-item .a-label{font:700 .7rem 'JetBrains Mono',monospace;color:var(--cyan);letter-spacing:.04em}.assignment-item p{margin:6px 0;color:var(--text);line-height:1.8;font-size:.9rem}.assignment-item small{color:var(--text-faint);line-height:1.7}
+  .pattern-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:10px 0 18px}
+  .pattern-card{border:1px solid rgba(32,217,255,.17);border-radius:11px;padding:12px;background:rgba(255,255,255,.02)}.pattern-card h5{margin:0 0 6px;color:var(--cyan-lt);font-size:.84rem}.pattern-card p{margin:0;color:var(--text-dim);font-size:.8rem;line-height:1.7}
+  .what-changes{padding:13px 15px;border-radius:11px;border:1px dashed rgba(124,235,255,.28);background:rgba(32,217,255,.035);color:var(--text-dim);line-height:1.8;font-size:.88rem;margin-bottom:15px}.what-changes b{color:var(--cyan-lt)}
+  .cram-panel{border:1px solid rgba(32,217,255,.25);border-radius:14px;padding:16px;background:linear-gradient(135deg,rgba(20,123,255,.12),rgba(32,217,255,.04));margin-bottom:18px}
+  .cram-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}.cram-box{padding:12px;border-radius:10px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07)}.cram-box h4{margin:0 0 7px;color:var(--cyan-lt);font-size:.85rem}.cram-box p,.cram-box li{font-size:.82rem;line-height:1.75;color:var(--text-dim)}.cram-box ul{margin:0;padding-left:18px}
+  .mock-wrap{border:1px solid var(--line);border-radius:14px;padding:18px;background:var(--panel-solid);margin-bottom:18px}.mock-q{padding:14px 0;border-bottom:1px solid rgba(255,255,255,.08)}.mock-q:last-child{border-bottom:0}.mock-q h4{margin:0 0 8px;color:var(--cyan-lt);font-size:.84rem}.mock-score{font:700 1.1rem 'JetBrains Mono',monospace;color:var(--cyan);padding:12px;border:1px solid rgba(32,217,255,.2);border-radius:10px;margin-bottom:12px}
+  .source-note{font-size:.76rem;color:var(--text-faint);line-height:1.7;margin:8px 0 16px}.source-note b{color:var(--cyan-lt)}
+  @media(max-width:760px){.home-actions{grid-template-columns:1fr}.mode-switcher{width:100%}.mode-btn{flex:1;min-width:0}.assignment-map-grid,.pattern-grid,.cram-grid{grid-template-columns:1fr}.assignment-card{min-height:80px}}
+  @media(max-width:480px){.mode-btn{font-size:.7rem;padding:8px 7px}.assignment-card p{font-size:.72rem}.cram-box p,.cram-box li{font-size:.78rem}}
+
+  @media print{.home-actions,.mode-switcher,.assignment-map,.exam-map,.control-bar,.lesson-footer-actions,.chapter-action,.nav-row,.source-note{display:none!important}.lesson-body[hidden]{display:block!important}.assignment-detail{break-inside:avoid}.question{break-inside:avoid}}
+
+
+/* ============================================================
+   CINEMATIC HUD UI — futuristic armored-interface treatment
+   Keeps the existing blue/white/cyan palette and all functions.
+   ============================================================ */
+:root{
+  --hud-cyan:#21e6ff;
+  --hud-cyan-2:#7df4ff;
+  --hud-blue:#1587ff;
+  --hud-blue-2:#3db5ff;
+  --hud-white:#f4fbff;
+  --hud-deep:#020914;
+  --hud-panel:rgba(3,17,35,.88);
+  --hud-line:rgba(45,213,255,.34);
+  --hud-glow:0 0 10px rgba(33,230,255,.28),0 0 28px rgba(21,135,255,.12);
+  --hud-glow-strong:0 0 10px rgba(125,244,255,.55),0 0 28px rgba(21,135,255,.28),0 0 58px rgba(21,135,255,.12);
+}
+
+body{
+  background:
+    radial-gradient(circle at 50% -12%,rgba(33,230,255,.18),transparent 28%),
+    radial-gradient(circle at 8% 24%,rgba(21,135,255,.12),transparent 30%),
+    radial-gradient(circle at 92% 64%,rgba(33,230,255,.08),transparent 28%),
+    linear-gradient(180deg,#01050b 0%,#020914 45%,#020d1d 100%);
+}
+body::before{
+  content:"";
+  position:fixed; inset:0; pointer-events:none; z-index:-1; opacity:.22;
+  background-image:
+    linear-gradient(rgba(61,181,255,.045) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(61,181,255,.045) 1px,transparent 1px);
+  background-size:32px 32px;
+  mask-image:linear-gradient(to bottom,black,transparent 85%);
+}
+body::after{
+  content:"";
+  position:fixed; left:0; right:0; top:-30%; height:22%; pointer-events:none; z-index:50;
+  background:linear-gradient(180deg,transparent,rgba(33,230,255,.035),transparent);
+  border-bottom:1px solid rgba(33,230,255,.06);
+  animation:hudScan 12s linear infinite;
+}
+
+/* ---- HUD framing ---- */
+.masthead,.exam-map,.control-bar,.chapter-row,.lesson-box,.question,.assignment-map,.assignment-detail,.cram-panel,.mock-wrap,.result-hero,.stage-finish{
+  position:relative;
+  isolation:isolate;
+}
+.masthead::before,.exam-map::before,.control-bar::before,.lesson-box::before,.question::before,.assignment-map::before,.assignment-detail::before,.cram-panel::before,.mock-wrap::before,.result-hero::before{
+  content:""; position:absolute; inset:0; pointer-events:none; z-index:-1; border-radius:inherit;
+  background:
+    linear-gradient(90deg,transparent 0 8%,rgba(33,230,255,.035) 8.2% 8.35%,transparent 8.5% 91.5%,rgba(33,230,255,.035) 91.65% 91.8%,transparent 92%),
+    linear-gradient(180deg,rgba(33,230,255,.045),transparent 18% 82%,rgba(21,135,255,.035));
+}
+.masthead::after,.exam-map::after,.control-bar::after,.lesson-box::after,.question::after,.assignment-map::after,.assignment-detail::after,.cram-panel::after,.mock-wrap::after,.result-hero::after{
+  content:""; position:absolute; width:44px; height:10px; right:12px; top:-1px; pointer-events:none;
+  border-top:1px solid var(--hud-cyan); border-right:1px solid var(--hud-cyan);
+  opacity:.7; filter:drop-shadow(0 0 5px rgba(33,230,255,.55));
+}
+
+.masthead{
+  border-color:rgba(33,230,255,.38);
+  box-shadow:var(--shadow),var(--hud-glow);
+  background:
+    linear-gradient(135deg,rgba(33,230,255,.08),transparent 28%),
+    linear-gradient(180deg,rgba(7,29,54,.92),rgba(2,12,27,.94));
+  overflow:hidden;
+}
+.masthead .eyebrow{position:relative;text-shadow:0 0 9px rgba(33,230,255,.55)}
+.masthead .eyebrow::before{box-shadow:0 0 9px rgba(33,230,255,.8)}
+.masthead h1{text-shadow:0 0 22px rgba(33,230,255,.18)}
+
+/* ---- Primary action buttons ---- */
+.btn{
+  position:relative; overflow:hidden; isolation:isolate;
+  min-height:46px; padding:10px 19px;
+  border:1px solid rgba(125,244,255,.72);
+  border-radius:7px;
+  background:
+    linear-gradient(180deg,rgba(125,244,255,.22),rgba(21,135,255,.08)),
+    linear-gradient(135deg,#0b75dc,#18c9f0 52%,#0873d9);
+  color:#001019;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.55),inset 0 -8px 18px rgba(0,22,55,.22),0 0 0 1px rgba(21,135,255,.18),0 0 16px rgba(21,135,255,.2);
+  text-shadow:0 1px 0 rgba(255,255,255,.35);
+  letter-spacing:.01em;
+  transition:transform .16s ease,box-shadow .16s ease,filter .16s ease,border-color .16s ease;
+}
+.btn::before{
+  content:""; position:absolute; left:-20%; top:0; width:18%; height:100%; z-index:-1;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.7),transparent);
+  transform:skewX(-18deg); opacity:.65;
+}
+.btn::after{
+  content:""; position:absolute; inset:3px; pointer-events:none; border-top:1px solid rgba(255,255,255,.24); border-left:1px solid rgba(255,255,255,.12); border-radius:5px;
+}
+.btn:hover{
+  transform:translateY(-2px);
+  filter:brightness(1.1) saturate(1.08);
+  border-color:var(--hud-cyan-2);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.72),inset 0 -8px 18px rgba(0,22,55,.18),0 0 0 1px rgba(33,230,255,.32),var(--hud-glow-strong);
+}
+.btn:hover::before{animation:hudShine .72s ease-out}
+.btn:active{transform:translate3d(0,0,0) scale(.995);filter:brightness(.98)}
+.btn.secondary{
+  color:var(--hud-cyan-2); border-color:rgba(33,230,255,.55);
+  background:linear-gradient(180deg,rgba(33,230,255,.10),rgba(21,135,255,.025)),rgba(2,18,36,.86);
+  box-shadow:inset 0 0 16px rgba(33,230,255,.045),0 0 0 1px rgba(21,135,255,.08);
+  text-shadow:0 0 8px rgba(33,230,255,.22);
+}
+.btn.secondary:hover{background:linear-gradient(180deg,rgba(33,230,255,.18),rgba(21,135,255,.06)),rgba(2,18,36,.92);box-shadow:inset 0 0 18px rgba(33,230,255,.07),var(--hud-glow)}
+.btn.ghost{
+  color:#b9d5e8; border-color:rgba(125,170,201,.28);
+  background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.012)),rgba(2,13,27,.78);
+  box-shadow:inset 0 0 14px rgba(255,255,255,.018);
+}
+.btn.ghost:hover{color:var(--hud-white);border-color:rgba(125,244,255,.45);box-shadow:var(--hud-glow)}
+.btn:focus-visible{outline:2px solid var(--hud-cyan-2);outline-offset:3px;box-shadow:var(--hud-glow-strong)}
+.btn .ripple{position:absolute;border-radius:50%;transform:scale(0);background:rgba(255,255,255,.62);pointer-events:none;animation:hudRipple .55s ease-out}
+
+/* ---- Mode buttons: armored HUD tabs ---- */
+.mode-switcher{padding:3px;border:1px solid rgba(33,230,255,.18);background:rgba(0,8,18,.5);border-radius:10px;box-shadow:inset 0 0 18px rgba(33,230,255,.025)}
+.mode-btn{
+  touch-action:manipulation;
+  -webkit-user-select:none; user-select:none;
+  position:relative; overflow:hidden; min-height:44px; border:1px solid transparent; border-radius:7px;
+  background:linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,.006));
+  color:#9fb8c9; letter-spacing:.015em; transition:all .16s ease; box-shadow:inset 0 0 0 transparent;
+}
+.mode-btn::before{content:"";position:absolute;left:7px;right:7px;top:3px;height:1px;background:linear-gradient(90deg,transparent,rgba(125,244,255,.45),transparent);opacity:.4}
+.mode-btn:hover{color:var(--hud-cyan-2);border-color:rgba(33,230,255,.28);background:rgba(33,230,255,.055);text-shadow:0 0 8px rgba(33,230,255,.3)}
+.mode-btn.active{
+  color:#eaffff; border-color:rgba(125,244,255,.72);
+  background:linear-gradient(180deg,rgba(33,230,255,.18),rgba(21,135,255,.07));
+  box-shadow:inset 0 0 18px rgba(33,230,255,.07),0 0 14px rgba(33,230,255,.12);
+  text-shadow:0 0 10px rgba(125,244,255,.5);
+}
+.mode-btn.active::after{content:"";position:absolute;left:10%;right:10%;bottom:3px;height:2px;background:var(--hud-cyan);box-shadow:0 0 9px var(--hud-cyan)}
+
+/* ---- Home action rail ---- */
+.home-actions .btn{min-height:58px;font-size:.94em;border-radius:8px}
+.home-actions .btn::after{inset:4px}
+.home-actions .btn:first-child{box-shadow:inset 0 1px 0 rgba(255,255,255,.55),var(--hud-glow)}
+
+/* ---- Chapter rows become selectable HUD modules ---- */
+.chapter-row{
+  border-color:rgba(33,230,255,.24); background:linear-gradient(90deg,rgba(5,25,47,.88),rgba(3,14,29,.82));
+  box-shadow:inset 0 0 24px rgba(33,230,255,.018),0 5px 18px rgba(0,0,0,.24);
+}
+.chapter-row::before{content:"";position:absolute;left:0;top:13px;bottom:13px;width:2px;background:linear-gradient(180deg,transparent,var(--hud-cyan),transparent);opacity:.55;box-shadow:0 0 8px rgba(33,230,255,.4)}
+.chapter-row:hover{transform:translate3d(2px,0,0);border-color:rgba(33,230,255,.58);background:linear-gradient(90deg,rgba(7,34,61,.94),rgba(3,15,31,.92));box-shadow:var(--hud-glow)}
+.chapter-idx{font-size:.82em;letter-spacing:.08em;text-shadow:0 0 10px rgba(33,230,255,.5)}
+.chapter-action .btn{min-width:118px}
+
+/* ---- Assignment cards ---- */
+.assignment-card,.practice-card{
+  position:relative;overflow:hidden;border-color:rgba(33,230,255,.22)!important;
+  background:linear-gradient(135deg,rgba(10,34,60,.8),rgba(2,15,29,.9))!important;
+  box-shadow:inset 0 0 20px rgba(33,230,255,.025),0 6px 18px rgba(0,0,0,.2);
+  transition:transform .16s ease,border-color .16s ease,box-shadow .16s ease,background .16s ease;
+}
+.assignment-card::before,.practice-card::before{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 0 35%,rgba(125,244,255,.045) 45%,transparent 55%);transform:translateX(-120%);transition:transform .5s ease;pointer-events:none}
+.assignment-card::after,.practice-card::after{content:"";position:absolute;right:8px;bottom:8px;width:24px;height:24px;border-right:1px solid rgba(33,230,255,.45);border-bottom:1px solid rgba(33,230,255,.45);pointer-events:none}
+.assignment-card:hover,.practice-card:hover{transform:translate3d(0,-2px,0);border-color:rgba(125,244,255,.58)!important;box-shadow:var(--hud-glow)}
+.assignment-card:hover::before,.practice-card:hover::before{transform:translateX(120%)}
+
+/* ---- Lesson controls ---- */
+.lesson-collapse-btn,.lesson-open-btn{
+  touch-action:manipulation;
+  position:relative;overflow:hidden;min-height:44px;border-radius:7px!important;border-color:rgba(33,230,255,.55)!important;
+  background:linear-gradient(180deg,rgba(33,230,255,.11),rgba(21,135,255,.035))!important;
+  box-shadow:inset 0 0 14px rgba(33,230,255,.04),0 0 10px rgba(33,230,255,.06);
+  color:var(--hud-cyan-2)!important;text-shadow:0 0 8px rgba(33,230,255,.28);
+}
+.lesson-collapse-btn:hover,.lesson-open-btn:hover{box-shadow:var(--hud-glow);background:rgba(33,230,255,.14)!important}
+.lesson-tag{box-shadow:0 0 8px rgba(33,230,255,.08);text-shadow:0 0 7px rgba(33,230,255,.4)}
+
+/* ---- Back link / section headings ---- */
+.back-link{position:relative;color:var(--hud-cyan-2);text-shadow:0 0 8px rgba(33,230,255,.25);padding-left:3px}
+.back-link::before{content:"//";font-family:'JetBrains Mono',monospace;color:var(--hud-blue-2);margin-right:2px}
+h2{border-left:0;padding-left:0;position:relative;text-shadow:0 0 13px rgba(33,230,255,.08)}
+h2::before{content:"";display:inline-block;width:20px;height:2px;background:var(--hud-cyan);vertical-align:middle;margin:0 8px 3px 0;box-shadow:0 0 8px rgba(33,230,255,.7)}
+
+/* ---- Control bar ---- */
+.control-bar{border-color:rgba(33,230,255,.3);background:linear-gradient(180deg,rgba(5,27,50,.9),rgba(2,14,28,.9));box-shadow:var(--shadow),var(--hud-glow)}
+.progress-track{height:7px;background:rgba(0,0,0,.48);border:1px solid rgba(33,230,255,.14);box-shadow:inset 0 0 8px rgba(0,0,0,.45)}
+.progress-fill{box-shadow:0 0 10px rgba(33,230,255,.55);position:relative}
+.progress-fill::after{content:"";position:absolute;right:0;top:0;width:14px;height:100%;background:#dffcff;box-shadow:0 0 12px #7df4ff}
+.teach-toggle{border-color:rgba(33,230,255,.32)!important;box-shadow:inset 0 0 12px rgba(33,230,255,.03),0 0 10px rgba(33,230,255,.04)!important}
+.switch{box-shadow:inset 0 0 8px rgba(0,0,0,.35);border:1px solid rgba(125,244,255,.16)}
+.switch.on{box-shadow:0 0 10px rgba(33,230,255,.32)}
+.switch.on::after{box-shadow:0 0 9px rgba(125,244,255,.9)}
+
+/* ---- HUD result / status ---- */
+.result-hero,.stage-finish{border-color:rgba(33,230,255,.35)!important;box-shadow:var(--hud-glow)}
+.result-score,.mock-score{ text-shadow:0 0 16px rgba(125,244,255,.28)}
+
+/* ---- Subtle micro-tech decorations ---- */
+.exam-map-kicker,.a-label,.a-num,.a-count,.lesson-sub{ text-shadow:0 0 7px rgba(33,230,255,.18)}
+.exam-badge{box-shadow:inset 0 0 10px rgba(33,230,255,.03),0 0 8px rgba(33,230,255,.03)}
+
+
+.hud-status{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:16px;font:600 .62rem 'JetBrains Mono',monospace;letter-spacing:.12em;color:rgba(125,244,255,.72);text-transform:uppercase}
+.hud-status-dot{width:7px;height:7px;border-radius:50%;background:var(--hud-cyan);box-shadow:0 0 7px var(--hud-cyan),0 0 15px rgba(33,230,255,.55);animation:hudPulse 1.8s ease-in-out infinite}
+.hud-status-sep{color:rgba(61,181,255,.32)}
+@keyframes hudPulse{0%,100%{opacity:.55;transform:scale(.9)}50%{opacity:1;transform:scale(1.15)}}
+
+@keyframes hudShine{0%{left:-20%;opacity:0}15%{opacity:.8}100%{left:120%;opacity:0}}
+@keyframes hudRipple{to{transform:scale(5);opacity:0}}
+@keyframes hudScan{0%{transform:translateY(-140%)}100%{transform:translateY(680%)}}
+
+@media(max-width:760px){
+  .home-actions{grid-template-columns:1fr}
+  .home-actions .btn{min-height:54px}
+  .chapter-row:hover{transform:none}
+}
+@media(prefers-reduced-motion:reduce){
+  body::after{animation:none}
+  .btn::before,.assignment-card::before,.practice-card::before{animation:none!important;transition:none}
+}
+
+
+/* ===== ULTRA-SMOOTH VIEWPORT CONTRACT ===== */
+html, body {
+  overscroll-behavior: auto;
+  overflow-anchor: auto;
+  scroll-behavior: auto !important;
+}
+body { touch-action: auto; }
+#app { overflow-anchor: auto; }
+#app.view-swapping { opacity: .995; }
+button, .btn, .mode-btn, .assignment-card, .chapter-row, .lesson-collapse-btn {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+/* Keep the HUD futuristic without physically moving the page when hovering/pressing. */
+.btn:hover,
+.btn:active,
+.mode-btn:hover,
+.mode-btn:active,
+.assignment-card:hover,
+.assignment-card:active,
+.practice-card:hover,
+.practice-card:active,
+.chapter-row:hover,
+.chapter-row:active {
+  transform: none !important;
+}
+.btn, .mode-btn, .assignment-card, .practice-card, .chapter-row {
+  transition-property: box-shadow, border-color, background-color, background-image, color, filter, opacity;
+  transition-duration: 180ms;
+  transition-timing-function: ease-out;
+}
+/* GPU only for the visual layer, never for layout/scroll containers. */
+.btn::before, .assignment-card::before, .practice-card::before { will-change: transform; }
+@media (prefers-reduced-motion: reduce) {
+  #app.view-swapping { opacity: 1; }
+}
+
+/* ===== NORM E.MATH I — final cross-device safety layer ===== */
+html,body{width:100%;max-width:100%;overflow-x:hidden;}
+body{min-height:100vh;min-height:100svh;padding-left:max(8px,env(safe-area-inset-left));padding-right:max(8px,env(safe-area-inset-right));padding-bottom:max(76px,calc(76px + env(safe-area-inset-bottom)));}
+*,*::before,*::after{min-width:0;}
+img,svg,video,canvas,iframe{max-width:100%;}
+button,input,select,textarea{max-width:100%;}
+button,.btn,.mode-btn,.lesson-collapse-btn,.teach-toggle{touch-action:manipulation;}
+/* Prevent long content from forcing the page wider. */
+pre,code,.mcq-explain,.lesson-source,.lesson-writeup,.lesson-intro,.lesson-theory,.lesson-recognize,.lesson-exam,.lesson-memory,.deep-solution,.deep-example,.question,.choices,.assignment-card,.practice-card{overflow-wrap:anywhere;word-break:normal;}
+/* Tables scroll locally rather than making the whole page wider. */
+table{width:max-content;max-width:none;border-collapse:collapse;}
+.table-wrap,.table-responsive{width:100%;max-width:100%;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;}
+/* If existing markup has a bare table, keep it usable on narrow screens. */
+.lesson-body table,.lesson-source table,.lesson-writeup table{display:table;max-width:none;}
+/* Long KaTeX display equations scroll only inside the equation. */
+.katex-display{max-width:100%;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;}
+.math-fallback.math-display{max-width:100%;overflow-x:auto;overflow-y:hidden;white-space:pre;}
+/* Keep flex/grid children from creating accidental horizontal overflow. */
+.flex,.row,.nav-row,.home-actions,.control-bar,.progress-info,.lesson-head,.lesson-head-title,.stage-finish{max-width:100%;}
+.chapter-row,.lesson-head,.lesson-head-title,.nav-row{min-width:0;}
+/* Sticky UI must respect notches and small landscape screens. */
+@supports (padding:max(0px)){.control-bar{top:max(0px,env(safe-area-inset-top));}}
+@media (orientation:landscape) and (max-height:520px){
+  body{padding-bottom:max(60px,calc(60px + env(safe-area-inset-bottom)));}
+  .masthead{padding-top:14px;padding-bottom:14px;}
+  .control-bar{padding-top:8px;padding-bottom:8px;}
+}
+@media (max-width:760px){
+  body{max-width:none;}
+  .masthead,.control-bar,.lesson-box,.lesson-source,.lesson-writeup,.lesson-intro,.lesson-theory,.lesson-recognize,.lesson-exam,.lesson-memory,.exam-map,.pattern-grid,.cram-grid,.assignment-map-grid{max-width:100%;}
+  .home-actions{grid-template-columns:1fr!important;}
+  .nav-row{display:grid!important;grid-template-columns:1fr!important;gap:8px!important;}
+  .nav-row .btn{width:100%!important;}
+  .chapter-action .btn{max-width:100%;}
+}
+@media (max-width:480px){
+  body{padding-left:max(8px,env(safe-area-inset-left));padding-right:max(8px,env(safe-area-inset-right));}
+  .masthead h1{font-size:clamp(1.3rem,7vw,1.7rem)!important;line-height:1.2;}
+  .control-bar{gap:8px;}
+  .mode-switcher{width:100%;max-width:100%;}
+  .mode-btn{min-width:0!important;font-size:.72rem!important;padding:8px 6px!important;}
+  .lesson-head-title h4{overflow-wrap:anywhere;}
+  .question{padding:13px!important;}
+  .choices label{min-height:48px;}
+  textarea{font-size:16px!important;}
+}
+@media (max-width:360px){
+  body{padding-left:8px;padding-right:8px;}
+  .masthead{padding-left:12px!important;padding-right:12px!important;}
+  .mode-btn{font-size:.67rem!important;}
+  .lesson-head{flex-direction:column;align-items:stretch;}
+  .lesson-collapse-btn{width:100%;}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;}
+}
+
+</style>
+
+<meta name="application-name" content="NORM E.MATH I">
+<meta name="apple-mobile-web-app-title" content="NORM E.MATH I">
+<meta name="mobile-web-app-capable" content="yes">
+</head>
+<body>
+
+<div class="masthead">
+  <div class="eyebrow">Engineering Math I · ชีทติวก่อนสอบ</div>
+  <h1>Engineering Mathematics I</h1>
+  <p class="subtitle">ระบบติวแบบ Assignment → Exam: ยึดโครงโจทย์จาก Assignment 1 เป็นแกน และฝึกให้ทำโจทย์ที่เปลี่ยนตัวเลข/รายละเอียดเล็กน้อยได้เอง. มี Deep Teach, Cram Mode, Pattern Drill, ปรนัย และอัตนัยพร้อมเฉลย</p>
+  <div class="hud-status"><span class="hud-status-dot"></span><span>SYSTEM ONLINE</span><span class="hud-status-sep">//</span><span>ASSIGNMENT LINKED</span><span class="hud-status-sep">//</span><span>READY</span></div>
+</div>
+
+<section class="exam-map" aria-label="Exam pattern">
+  <div class="exam-map-kicker">ASSIGNMENT → EXAM • ENGINEERING MATH I • 1/2569</div>
+  <h2>เป้าหมายของไฟล์นี้: ทำ Assignment Pattern ให้ได้ แม้ข้อสอบเปลี่ยนเลข</h2>
+  <p>Assignment มี 8 ข้อ และกำหนดให้แสดงวิธีทำละเอียดทุกข้อ. จากข้อมูลที่คุณให้มา แนวสอบยึด Assignment เป็นแกน โดยเปลี่ยนตัวเลขหรือรายละเอียดเล็กน้อย. ดังนั้นระบบนี้จึงแยก “โจทย์ต้นแบบ” ออกจาก “โจทย์ฝึกเปลี่ยนเลข” และสอนวิธีเขียนคำตอบทีละขั้น. ข้อ 1 ของ Assignment ระบุห้ามใช้ L'Hôpital.</p>
+  <div class="exam-map-grid"><span>01 LIMIT</span><span>02 CONTINUITY</span><span>03 DERIVATIVE</span><span>04 PARAMETRIC</span><span>05 LOG / IMPLICIT</span><span>06 APPROX / ERROR</span><span>07 CURVE</span><span>08 OPT / L'HÔPITAL</span></div>
+</section>
+
+<div class="source-note math-note"><b>การแสดงสมการ:</b> ใช้ KaTeX เมื่อโหลดได้; หากอุปกรณ์ออฟไลน์ ระบบจะแปลงสัญลักษณ์เป็นรูปแบบข้อความที่อ่านได้แทน เพื่อไม่ให้เห็นคำสั่งอย่าง \frac หรือ \sqrt แบบดิบ.</div>
+
+<div class="home-actions" id="homeActions">
+  <button class="btn" type="button" onclick="startMockExam()">🔥 จำลองสอบ 14 ข้อ</button>
+  <button class="btn secondary" type="button" onclick="showAssignmentMap()">🗺️ ดู Assignment Map</button>
+  <button class="btn ghost" type="button" onclick="showCramAll()">⚡ Cram 30 นาที</button>
+</div>
+<div class="control-bar" role="toolbar" aria-label="ตัวควบคุมการเรียน">
+  <div class="progress-info">
+    <span class="progress-label">ความคืบหน้า</span>
+    <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    <span class="progress-num" id="progressNum">0/14 บท</span>
+  </div>
+  <div class="mode-switcher" role="group" aria-label="โหมดการเรียน">
+    <button class="mode-btn active" id="modeDeepBtn" type="button" onclick="setStudyMode('deep')">📖 Deep Teach</button>
+    <button class="mode-btn" id="modeCramBtn" type="button" onclick="setStudyMode('cram')">⚡ Cram</button>
+    <button class="mode-btn" id="modePracticeBtn" type="button" onclick="setStudyMode('practice')">📝 Practice</button>
+  </div>
+</div>
+
+<div id="app"></div>
+
+<script id="stage-data" type="application/json">
+[{"name":"ลิมิต — รูปแบบ Assignment 1","icon":"📉","lesson":{"concept":"ลิมิตบอกว่า $f(x)$ เข้าใกล้ค่าอะไรเมื่อ $x$ เข้าใกล้จุดหนึ่ง โดยไม่สนใจว่า $f$ จะนิยามที่จุดนั้นจริงหรือไม่ ข้อสอบเน้น 3 กลุ่มเทคนิค: แยกตัวประกอบ (รูป 0/0), ลิมิตตรีโกณมาตรฐาน, และลิมิตที่อนันต์ (เทียบดีกรีเศษ-ส่วน)","formulas":["$\\lim_{u\\to0}\\frac{\\sin u}{u}=1,\\quad \\lim_{u\\to0}\\frac{\\tan u}{u}=1$","$\\lim_{x\\to\\infty}\\frac{a_nx^n+\\cdots}{b_mx^m+\\cdots}$: compare n and m","$\\sqrt{x^2}=|x|$ (สำคัญเมื่อ $x\\to\\pm\\infty$)","Conjugate: $(A-B)(A+B)=A^2-B^2$","Two-sided limit exists only when left and right limits agree"],"method":["แทนค่า $x=a$ ตรง ๆ ก่อนเสมอ — ถ้าไม่ใช่ 0/0 หรือ ∞/∞ ตอบได้ทันที","ถ้าได้ 0/0 จากพหุนาม → แยกตัวประกอบแล้วตัดพจน์ร่วมทิ้ง","ถ้ามีรากที่สอง → คูณด้วย conjugate ของพจน์นั้น","ถ้า $x\\to\\infty$ ของเศษส่วนพหุนาม → หารทุกพจน์ด้วยกำลังสูงสุดของตัวส่วน","ถ้าเป็นฟังก์ชันแบ่งช่วงหรือมีค่าสัมบูรณ์ ต้องคำนวณลิมิตซ้ายและขวาแยกกันก่อนสรุป"],"example":{"prompt":"จงหา $\\displaystyle\\lim_{x\\to3}\\dfrac{x^2-2x-3}{x-3}$","solution":"แยกตัวประกอบ $x^2-2x-3=(x-3)(x+1)$ ตัด $(x-3)$ ทิ้ง เหลือ $\\lim_{x\\to3}(x+1)=3+1=4$"},"pitfalls":["ลืมเช็คว่าลิมิตซ้าย-ขวาเท่ากันก่อนสรุปว่าลิมิตมีค่า","เจอรูป 0/0 แล้วรีบสรุปว่า 'หาค่าไม่ได้' ทั้งที่ตัดพจน์ร่วมได้","สับสนระหว่าง $\\lim_{x\\to\\infty}$ กับการแทนค่า $x$ มาก ๆ ตรง ๆ (ต้องเทียบดีกรี ไม่ใช่แทนค่า)"],"intuition":"ก่อนหาคำตอบต้องตอบคำถามแรกว่า 'ลิมิตมีค่าหรือไม่?' จากนั้นจึงเลือกเครื่องมือให้ตรงกับรูปที่เกิดหลังแทนค่า.","recognize":"เห็นโจทย์ 1.1–1.6 ให้จำว่าไม่ใช้ L'Hôpital. 0/0 → factor; รากที่ลบกันเมื่อ $x\\to\\infty$ → conjugate; trig → ทำให้มี $\\sin u/u$ หรือ $\\tan u/u$; rational infinity → เทียบดีกรี.","theory":"ถ้าแทนค่าแล้วได้จำนวนจริงธรรมดา ให้แทนได้เลย. ถ้าได้ $0/0$ แปลว่ายังจัดรูปไม่เสร็จ. ถ้าได้รูปที่ต้องพิจารณาซ้าย-ขวา เช่น $5/(x-4)$ ให้แยก $x\\to4^-$ และ $x\\to4^+$. สำหรับ $x\\to\\infty$ ให้ดูพฤติกรรมของพจน์ที่โตเร็วที่สุด.","workflow":["แทนค่าหรือดูพฤติกรรมที่จุดเข้าใกล้","เขียน 'รูปที่ได้' ให้ชัด เช่น $0/0$, $\\infty-\\infty$ หรือ one-sided","เลือกวิธีตามรูป ไม่เลือกจากความเคยชิน","จัดรูปโดยไม่เปลี่ยนลิมิต","แทน/ส่งลิมิตอีกครั้ง","ถ้าค่าซ้ายและขวาไม่เท่ากัน ให้สรุป DNE พร้อมเหตุผล"],"deepExamples":[{"title":"ตรงกับ Assignment 1.1","prompt":"$\\displaystyle\\lim_{x\\to-3}\\frac{2x+6}{4x^2-36}$","solution":"ได้ $0/0$. Factor: $2(x+3)/[4(x-3)(x+3)] = 1/[2(x-3)]$. แทน $-3$ ได้ $-1/12$.","answer":"$-1/12$"},{"title":"ตรงกับ Assignment 1.2","prompt":"$\\displaystyle\\lim_{x\\to4}\\frac5{x-4}$","solution":"ซ้ายให้ $-\\infty$, ขวาให้ $+\\infty$. เพราะสองข้างไม่ตรงกัน ลิมิตสองข้างจึงไม่มีค่า.","answer":"DNE"},{"title":"ตรงกับ Assignment 1.5","prompt":"$\\displaystyle\\lim_{x\\to\\infty}(\\sqrt{9x^2+x}-3x)$","solution":"คูณ conjugate ได้ $\\frac{x}{\\sqrt{9x^2+x}+3x}$. หารบน-ล่างด้วย $x$ แล้วได้ $\\frac1{\\sqrt{9+1/x}+3}\\to1/6$.","answer":"$1/6$"},{"title":"ตรงกับ Assignment 1.6","prompt":"$\\displaystyle\\lim_{x\\to0}\\frac{\\tan(3x)}{4x}$","solution":"เขียนเป็น $\\frac34\\frac{\\tan(3x)}{3x}$ แล้วใช้ $\\lim_{u\\to0}\\tan u/u=1$.","answer":"$3/4$"}],"exam":"จุดหลอกหลักคือ (1) รีบตอบ 0 เมื่อเห็น 0/0, (2) ไม่แยกซ้ายขวา, (3) ลืมว่า $\\sqrt{x^2}=|x|$, (4) ใช้ L'Hôpital ทั้งที่โจทย์ห้าม.","memory":"0/0 = จัดรูป; one-sided = แยก; infinity rational = เทียบดีกรี; infinity minus infinity = conjugate; trig = standard limit.","pattern":"Assignment 1 ข้อ 1 มี 6 ข้อย่อย และระบุชัดว่า **ห้ามใช้กฎของโลปิตาล**: ฝึก 0/0, one-sided/DNE, exponential, rational at infinity, radical at infinity และ trigonometric limit.","writeup":"ควรเขียนรูปที่ได้จากการแทนค่า → เหตุผลที่เลือกวิธี → การจัดรูปทุกบรรทัด → ค่าลิมิตสุดท้าย. ถ้า DNE ต้องแสดงซ้ายและขวา.","source":"เนื้อหาส่วนนี้ยึดรูปแบบโจทย์จาก Assignment 1 ภาคเรียนที่ 1/2569 เป็นหลัก ตามข้อมูลที่ผู้ใช้ระบุว่าข้อสอบยึด Assignment และเปลี่ยนตัวเลขหรือรายละเอียดเล็กน้อย","examStatus":"ตรงจาก Assignment 1 ข้อ 1"},"mcq":[{"q":"$\\displaystyle\\lim_{x\\to 2}\\frac{x^2-4}{x-2}$ มีค่าเท่าใด","c":["4","0","หาค่าไม่ได้","2","$\\infty$"],"a":0,"ex":"แยกตัวประกอบ $x^2-4=(x-2)(x+2)$ ตัด $(x-2)$ ทิ้ง เหลือ $\\lim_{x\\to2}(x+2)=4$"},{"q":"$\\displaystyle\\lim_{x\\to 0}\\frac{\\sin 3x}{x}$ มีค่าเท่าใด","c":["3","1","0","1/3","$\\infty$"],"a":0,"ex":"ใช้สูตร $\\lim_{x\\to0}\\frac{\\sin kx}{x}=k$ ดังนั้นค่าคือ 3"},{"q":"$\\displaystyle\\lim_{x\\to \\infty}\\frac{2x^2+3x}{5x^2-1}$ มีค่าเท่าใด","c":["2/5","3/5","0","$\\infty$","1"],"a":0,"ex":"เมื่อ $x\\to\\infty$ พจน์กำลังสูงสุดครอบงำ อัตราส่วนสัมประสิทธิ์คือ $2/5$"},{"q":"$\\displaystyle\\lim_{x\\to 0}\\frac{1-\\cos x}{x^2}$ มีค่าเท่าใด","c":["1/2","1","0","2","-1/2"],"a":0,"ex":"เป็นลิมิตมาตรฐานที่ต้องจำ: $\\lim_{x\\to0}\\frac{1-\\cos x}{x^2}=\\frac12$"},{"q":"กำหนด $f(x)=x+1$ เมื่อ $x<1$ และ $f(x)=x^2$ เมื่อ $x>1$ จง $\\lim_{x\\to1}f(x)$","c":["เท่ากับ 2","เท่ากับ 1","เท่ากับ 3","ไม่มีค่า เพราะลิมิตซ้ายขวาไม่เท่ากัน","เท่ากับ 0"],"a":3,"ex":"ลิมิตซ้าย $\\lim_{x\\to1^-}(x+1)=2$ ลิมิตขวา $\\lim_{x\\to1^+}x^2=1$ ไม่เท่ากัน จึงไม่มีลิมิต"}],"essay":[{"title":"หาลิมิตด้วยการทำ Conjugate","points":5,"prompt":"จงหา $\\displaystyle\\lim_{x\\to0}\\frac{\\sqrt{x+4}-2}{x}$ โดยวิธีคูณ conjugate","model":"คูณด้วย $\\frac{\\sqrt{x+4}+2}{\\sqrt{x+4}+2}$:\n$$\\frac{(x+4)-4}{x(\\sqrt{x+4}+2)}=\\frac{x}{x(\\sqrt{x+4}+2)}=\\frac{1}{\\sqrt{x+4}+2}$$\nแทน $x\\to0$: $\\dfrac{1}{2+2}=\\dfrac14$"},{"title":"ลิมิตที่ระยะอนันต์","points":5,"prompt":"จงหา $\\displaystyle\\lim_{x\\to\\infty}\\left(\\sqrt{9x^2+x}-3x\\right)$","model":"คูณ conjugate: $\\dfrac{(9x^2+x)-9x^2}{\\sqrt{9x^2+x}+3x}=\\dfrac{x}{\\sqrt{9x^2+x}+3x}$\nหารเศษ-ส่วนด้วย $x$ (สำหรับ $x>0$): $\\dfrac{1}{\\sqrt{9+1/x}+3}\\to\\dfrac{1}{3+3}=\\dfrac16$"}],"examStatus":"ตรงจาก Assignment 1 ข้อ 1","examKind":"direct","assignmentItems":[["1.1","หาค่า $\\displaystyle\\lim_{x\\to-3}\\frac{2x+6}{4x^2-36}$","0/0 → แยกตัวประกอบ → ตัดตัวประกอบร่วม → แทนค่า","ห้ามใช้ L'Hôpital ในข้อ 1"],["1.2","หาค่า $\\displaystyle\\lim_{x\\to4}\\frac{5}{x-4}$ หรือพิจารณาว่ามีค่าหรือไม่","แยกลิมิตซ้ายและขวา","ถ้าซ้าย/ขวาไม่เท่ากันต้องตอบว่าไม่มีลิมิต"],["1.3","หาค่า $\\displaystyle\\lim_{x\\to1^-}\\frac{1}{3^x-3}$","ตรวจ one-sided behavior ของตัวส่วน","ต้องระบุทิศทางและเหตุผล"],["1.4","หาค่า $\\displaystyle\\lim_{x\\to\\infty}\\frac{-5x^3+6x+3}{2x^3+x^2+1}$","เทียบกำลังสูงสุด/สัมประสิทธิ์","ดูเฉพาะพจน์กำลังสูงสุดเมื่อดีกรีเท่ากัน"],["1.5","หาค่า $\\displaystyle\\lim_{x\\to\\infty}(\\sqrt{9x^2+x}-3x)$","รูป $\\infty-\\infty$ → conjugate → หารด้วยกำลังที่เหมาะสม","ระวัง $\\sqrt{x^2}=|x|$"],["1.6","หาค่า $\\displaystyle\\lim_{x\\to0}\\frac{\\tan(3x)}{4x}$","จัดให้เป็น $\\tan u/u$","ใช้ลิมิตมาตรฐาน"]],"whatChanges":"ตัวเลข, จุดที่ x เข้าใกล้, coefficients, polynomial และ trig coefficient เปลี่ยนได้ แต่ “ชนิดของรูป” และ algorithm เดิมยังเหมือนเดิม","cram":{"mustKnow":"0/0 = จัดรูป; one-sided = แยก; infinity rational = เทียบดีกรี; infinity minus infinity = conjugate; trig = standard limit.","recognize":"เห็นโจทย์ 1.1–1.6 ให้จำว่าไม่ใช้ L'Hôpital. 0/0 → factor; รากที่ลบกันเมื่อ $x\\to\\infty$ → conjugate; trig → ทำให้มี $\\sin u/u$ หรือ $\\tan u/u$; rational infinity → เทียบดีกรี.","steps":["แทนค่าหรือดูพฤติกรรมที่จุดเข้าใกล้","เขียน 'รูปที่ได้' ให้ชัด เช่น $0/0$, $\\infty-\\infty$ หรือ one-sided","เลือกวิธีตามรูป ไม่เลือกจากความเคยชิน","จัดรูปโดยไม่เปลี่ยนลิมิต","แทน/ส่งลิมิตอีกครั้ง","ถ้าค่าซ้ายและขวาไม่เท่ากัน ให้สรุป DNE พร้อมเหตุผล"],"avoid":["ลืมเช็คว่าลิมิตซ้าย-ขวาเท่ากันก่อนสรุปว่าลิมิตมีค่า","เจอรูป 0/0 แล้วรีบสรุปว่า 'หาค่าไม่ได้' ทั้งที่ตัดพจน์ร่วมได้","สับสนระหว่าง $\\lim_{x\\to\\infty}$ กับการแทนค่า $x$ มาก ๆ ตรง ๆ (ต้องเทียบดีกรี ไม่ใช่แทนค่า)"],"writeup":"ควรเขียนรูปที่ได้จากการแทนค่า → เหตุผลที่เลือกวิธี → การจัดรูปทุกบรรทัด → ค่าลิมิตสุดท้าย. ถ้า DNE ต้องแสดงซ้ายและขวา.","assignment":"ตรงจาก Assignment 1 ข้อ 1"}},{"name":"ความต่อเนื่อง — หา k แบบใน Assignment","icon":"🔗","lesson":{"concept":"ฟังก์ชันต่อเนื่องที่ $x=a$ เมื่อครบ 3 เงื่อนไข: (1) $f(a)$ นิยามได้ (2) $\\lim_{x\\to a}f(x)$ มีอยู่จริง (3) ทั้งสองค่าเท่ากัน โจทย์ส่วนใหญ่ให้หาค่าคงที่ที่ทำให้ฟังก์ชันแบ่งช่วงต่อเนื่อง หรือให้จำแนกประเภทความไม่ต่อเนื่อง","formulas":["Continuity at a: $f(a)$ exists, $\\lim_{x\\to a}f(x)$ exists, and $\\lim_{x\\to a}f(x)=f(a)$","$\\lim_{x\\to a^-}f(x)=\\lim_{x\\to a^+}f(x)=f(a)$"],"method":["หาลิมิตซ้ายและลิมิตขวาที่จุดต่อของฟังก์ชันแบ่งช่วง","ตั้งสมการ ลิมิตซ้าย = ลิมิตขวา = $f(a)$ แล้วแก้หาค่าคงที่ที่โจทย์ถาม","ถ้าถามประเภทความไม่ต่อเนื่อง ให้ดูว่าลิมิตแต่ละข้างมีค่าจำกัดหรือไม่ และเท่ากันหรือไม่"],"example":{"prompt":"กำหนด $f(x)=kx^2$ เมื่อ $x\\le1$ และ $f(x)=2x+1$ เมื่อ $x>1$ จงหา $k$ ที่ทำให้ต่อเนื่องที่ $x=1$","solution":"ต้องให้ $k(1)^2=2(1)+1=3 \\Rightarrow k=3$"},"pitfalls":["ลืมตรวจว่า $f(a)$ นิยามจริงตามสูตร ไม่ใช่แค่คำนวณลิมิต","สับสน removable กับ jump — removable แก้ได้ด้วยการนิยามค่าใหม่ที่จุดเดียว ส่วน jump แก้ไม่ได้ด้วยวิธีนี้"],"intuition":"ความต่อเนื่องที่ $x=a$ ต้องมี 3 อย่างพร้อมกัน: $f(a)$ มีค่า, ลิมิตมีค่า, และลิมิตนั้นเท่ากับ $f(a)$.","recognize":"เห็นคำว่า 'ต่อเนื่องที่ $x=1$' → ไม่ต้องเช็กทั้งกราฟ; โฟกัสจุด 1. ถ้ามี $k$ ให้ใช้สมการจาก left = right = value.","theory":"สำหรับ piecewise จุดต่อรอยคือจุดเปลี่ยนสูตร. ในโจทย์ Assignment สูตรหนึ่งให้ $x\\le1$ และอีกสูตรให้ $x>1$ ดังนั้นต้องหา $\\lim_{x\\to1^-}$, $\\lim_{x\\to1^+}$ และ $f(1)$ ก่อน แล้วตั้งให้เท่ากัน.","workflow":["ระบุจุดที่ต้องตรวจ","คำนวณ $f(a)$ จาก branch ที่รวม equality","หา left-hand limit","หา right-hand limit","ตั้ง left = right และเท่ากับ $f(a)$","แก้ $k$ แล้วตรวจย้อนกลับ"],"deepExamples":[{"title":"ตรงกับ Assignment 2.1","prompt":"$\\displaystyle f(x)=\\begin{cases}k,&x\\le1\\\\\\frac{x^3-x}{x-1},&x>1\\end{cases}$ หา $k$","solution":"เมื่อ $x\\to1^+$ ได้ $\\frac{x(x-1)(x+1)}{x-1}=x(x+1)\\to2$. และ $f(1)=k$. ดังนั้น $k=2$.","answer":"$k=2$"},{"title":"รูปแบบเดียวกัน: removable","prompt":"$f(x)=\\frac{x^2-9}{x-3}$ เมื่อ $x\\ne3$, และ $f(3)=k$","solution":"ลดรูปเป็น $x+3$ สำหรับ $x\\ne3$. ลิมิตที่ 3 = 6 จึงต้องตั้ง $k=6$.","answer":"$k=6$"},{"title":"ตรวจความต่อเนื่องด้วย 3 เงื่อนไข","prompt":"$f(x)=|x|/x$ ที่ $x=0$","solution":"$f(0)$ ไม่ได้กำหนด และ left/right ต่างกันอยู่แล้ว จึงไม่ต่อเนื่องที่ 0.","answer":"ไม่ต่อเนื่อง"}],"exam":"อย่าตั้งแค่ $f(1)$ = สูตรขวา; ต้องดูว่าค่า ณ จุดใช้ branch ไหน. อีกกับดักคือไม่ simplify ก่อนหา right limit.","memory":"Continuous = defined + limit exists + same value. Piecewise: left = right = point value.","pattern":"Assignment 1 ข้อ 2.1 ให้ฟังก์ชันแบ่งช่วงและถามหาค่า $k$ ที่ทำให้ต่อเนื่องที่ $x=1$.","writeup":"เขียน 3 บรรทัดให้ครบ: $f(1)=...$, $\\lim_{x\\to1^-}f(x)=...$, $\\lim_{x\\to1^+}f(x)=...$ แล้วจึงตั้งสมการหา $k$.","source":"เนื้อหาส่วนนี้ยึดรูปแบบโจทย์จาก Assignment 1 ภาคเรียนที่ 1/2569 เป็นหลัก ตามข้อมูลที่ผู้ใช้ระบุว่าข้อสอบยึด Assignment และเปลี่ยนตัวเลขหรือรายละเอียดเล็กน้อย","examStatus":"ตรงจาก Assignment 1 ข้อ 2.1"},"mcq":[{"q":"เงื่อนไขใด 'ไม่จำเป็น' สำหรับความต่อเนื่องของ $f$ ที่ $x=a$","c":["$f(a)$ มีค่าจำกัด","$\\lim_{x\\to a}f(x)$ มีอยู่จริง","$\\lim_{x\\to a}f(x)=f(a)$","$f'(a)$ มีอยู่จริง","ไม่มีข้อถูก"],"a":3,"ex":"ความต่อเนื่องไม่ต้องการให้หาอนุพันธ์ได้ (differentiable) เช่น $|x|$ ต่อเนื่องที่ 0 แต่หาอนุพันธ์ที่ 0 ไม่ได้"},{"q":"กำหนด $f(x)=\\frac{x^2-1}{x-1}$ เมื่อ $x\\ne1$ และ $f(1)=2$ ฟังก์ชันนี้ที่ $x=1$ เป็นอย่างไร","c":["ต่อเนื่อง","ไม่ต่อเนื่องแบบ removable","ไม่ต่อเนื่องแบบ jump","ไม่ต่อเนื่องแบบ infinite","ไม่นิยาม"],"a":0,"ex":"$\\lim_{x\\to1}\\frac{x^2-1}{x-1}=\\lim_{x\\to1}(x+1)=2=f(1)$ จึงต่อเนื่อง"},{"q":"ความไม่ต่อเนื่องที่ลิมิตซ้าย-ขวามีค่าจำกัดแต่ไม่เท่ากัน เรียกว่าแบบใด","c":["Removable","Jump","Infinite","Oscillating","ไม่มีชื่อเรียก"],"a":1,"ex":"เรียกว่า Jump discontinuity (ความไม่ต่อเนื่องแบบกระโดด)"},{"q":"กำหนด $f(x)=kx+3$ เมื่อ $x\\le2$ และ $f(x)=x^2-1$ เมื่อ $x>2$ ค่า $k$ ใดทำให้ต่อเนื่องที่ $x=2$","c":["0","1","2","-1","3"],"a":0,"ex":"ต้องให้ $2k+3=2^2-1=3\\Rightarrow 2k=0\\Rightarrow k=0$"},{"q":"ฟังก์ชันในข้อใดต่อเนื่องทุกจุดบนเส้นจำนวนจริง","c":["พหุนาม (polynomial)","$1/x$","$\\tan x$","$\\lfloor x\\rfloor$ (floor function)","$\\sqrt{x}$"],"a":0,"ex":"พหุนามต่อเนื่องทุกจุดเสมอ ส่วนตัวเลือกอื่นมีจุดไม่ต่อเนื่องหรือโดเมนจำกัด"}],"essay":[{"title":"หาค่าคงที่ให้ฟังก์ชันต่อเนื่อง","points":4,"prompt":"กำหนด $f(x)=\\dfrac{x^2-9}{x-3}$ เมื่อ $x\\ne3$ และ $f(3)=k$ จงหาค่า $k$ ที่ทำให้ $f$ ต่อเนื่องที่ $x=3$","model":"$\\lim_{x\\to3}\\dfrac{x^2-9}{x-3}=\\lim_{x\\to3}\\dfrac{(x-3)(x+3)}{x-3}=\\lim_{x\\to3}(x+3)=6$\nดังนั้นต้องกำหนด $k=6$ จึงจะต่อเนื่อง"},{"title":"วิเคราะห์จุดไม่ต่อเนื่อง","points":4,"prompt":"จงหาจุดที่ $f(x)=\\dfrac{|x-2|}{x-2}$ ไม่ต่อเนื่อง และระบุประเภทของความไม่ต่อเนื่อง","model":"$f$ ไม่นิยามที่ $x=2$ (ตัวส่วนเป็น 0)\nลิมิตซ้าย: เมื่อ $x<2$, $|x-2|=-(x-2)$ ดังนั้น $f(x)=-1\\Rightarrow\\lim_{x\\to2^-}f(x)=-1$\nลิมิตขวา: เมื่อ $x>2$, $|x-2|=x-2$ ดังนั้น $f(x)=1\\Rightarrow\\lim_{x\\to2^+}f(x)=1$\nลิมิตซ้ายขวาไม่เท่ากัน $\\Rightarrow$ ไม่ต่อเนื่องแบบ Jump discontinuity ที่ $x=2$"}],"examStatus":"ตรงจาก Assignment 1 ข้อ 2.1","examKind":"direct","assignmentItems":[["2.1","กำหนด $f(x)=\\begin{cases}k,&x\\le1\\\\\\frac{x^3-x}{x-1},&x>1\\end{cases}$ หา $k$ ที่ทำให้ต่อเนื่องที่ $x=1$","left = right = value","จุดที่ต้องตรวจคือรอยต่อ $x=1$"]],"whatChanges":"ค่า k, จุดต่อรอย และนิพจน์ในแต่ละ branch เปลี่ยนได้ แต่ต้องใช้ left = right = f(a)","cram":{"mustKnow":"Continuous = defined + limit exists + same value. Piecewise: left = right = point value.","recognize":"เห็นคำว่า 'ต่อเนื่องที่ $x=1$' → ไม่ต้องเช็กทั้งกราฟ; โฟกัสจุด 1. ถ้ามี $k$ ให้ใช้สมการจาก left = right = value.","steps":["ระบุจุดที่ต้องตรวจ","คำนวณ $f(a)$ จาก branch ที่รวม equality","หา left-hand limit","หา right-hand limit","ตั้ง left = right และเท่ากับ $f(a)$","แก้ $k$ แล้วตรวจย้อนกลับ"],"avoid":["ลืมตรวจว่า $f(a)$ นิยามจริงตามสูตร ไม่ใช่แค่คำนวณลิมิต","สับสน removable กับ jump — removable แก้ได้ด้วยการนิยามค่าใหม่ที่จุดเดียว ส่วน jump แก้ไม่ได้ด้วยวิธีนี้"],"writeup":"เขียน 3 บรรทัดให้ครบ: $f(1)=...$, $\\lim_{x\\to1^-}f(x)=...$, $\\lim_{x\\to1^+}f(x)=...$ แล้วจึงตั้งสมการหา $k$.","assignment":"ตรงจาก Assignment 1 ข้อ 2.1"}},{"name":"อนุพันธ์โดยบทนิยาม — ห้ามใช้กฎสำเร็จรูป","icon":"🧮","lesson":{"concept":"อนุพันธ์คืออัตราการเปลี่ยนแปลงชั่วขณะ นิยามจาก difference quotient แล้วส่ง $h\\to0$ ข้อสอบข้อนี้เน้นให้ทำตามนิยามล้วน ๆ (ห้ามใช้สูตรลัดอย่าง Power Rule) เพื่อวัดว่าเข้าใจที่มาของอนุพันธ์จริง","formulas":["$f'(x)=\\displaystyle\\lim_{h\\to0}\\frac{f(x+h)-f(x)}h$","$f'(a)=\\displaystyle\\lim_{h\\to0}\\frac{f(a+h)-f(a)}h$","หลัง factor/conjugate ต้องตัด h ก่อนส่ง $h\\to0$"],"method":["เขียน $f(x+h)$ โดยแทนค่า $(x+h)$ ลงในฟังก์ชันจริงให้ครบทุกพจน์","จัดรูป $f(x+h)-f(x)$ ให้อยู่ในรูปที่มี $h$ เป็นตัวประกอบร่วม (กระจาย/แยกตัวประกอบ/คูณ conjugate)","หารด้วย $h$ ให้ $h$ ตัดออกไปก่อน แล้วจึงค่อยส่ง $h\\to0$"],"example":{"prompt":"หา $f'(x)$ เมื่อ $f(x)=x^2+3x$ โดยใช้นิยาม","solution":"$[(x+h)^2+3(x+h)]-[x^2+3x]=2xh+h^2+3h=h(2x+h+3)$ หารด้วย $h$ แล้วส่ง $h\\to0$: $f'(x)=2x+3$"},"pitfalls":["ส่ง $h\\to0$ ก่อนจัดรูปให้หารลงตัว ทำให้เจอ $0/0$ ทันที","ลืมกระจาย $f(x+h)$ ให้ครบทุกพจน์ โดยเฉพาะพจน์กำลังสองขึ้นไป"],"intuition":"โจทย์ประเภทนี้วัดว่าคุณเข้าใจ derivative เป็น limit ของ average rate of change ไม่ใช่แค่จำ Power Rule.","recognize":"มีคำว่า 'โดยใช้บทนิยามของอนุพันธ์' → ห้ามข้ามไป $nx^{n-1}$. ต้องเขียน difference quotient ตั้งแต่บรรทัดแรก.","theory":"นิยามคือ $f'(x)=\\lim_{h\\to0}\\frac{f(x+h)-f(x)}h$. หัวใจคือทำให้ $h$ ตัดออกก่อน แล้วจึงให้ $h\\to0$. ถ้าแทน $h=0$ ตั้งแต่ต้นจะได้ $0/0$ และยังตอบไม่ได้.","workflow":["เขียน definition","หา $f(x+h)$ อย่างระวังวงเล็บ","คำนวณ $f(x+h)-f(x)$","จัดรูปให้มีตัวประกอบ $h$","ตัด $h$","จึงค่อยใช้ $h\\to0$"],"deepExamples":[{"title":"ตรงกับ Assignment 2.2","prompt":"$f(x)=5x-3x^2$","solution":"$f(x+h)=5x+5h-3(x+h)^2$. ลบ $f(x)$ แล้วได้ $5h-6xh-3h^2=h(5-6x-3h)$. หารด้วย $h$ แล้วให้ $h\\to0$ ได้ $5-6x$.","answer":"$f'(x)=5-6x$"},{"title":"ตัวอย่างกำลังสอง","prompt":"$f(x)=x^2$ ใช้บทนิยาม","solution":"$[(x+h)^2-x^2]/h=[2xh+h^2]/h=2x+h\\to2x$.","answer":"$2x$"},{"title":"ตัวอย่างที่ต้องใช้ conjugate","prompt":"$f(x)=\\sqrt{x}$ ใช้บทนิยาม","solution":"$[\\sqrt{x+h}-\\sqrt{x}]/h$ คูณ conjugate แล้วได้ $1/[\\sqrt{x+h}+\\sqrt{x}]\\to1/(2\\sqrt{x})$.","answer":"$1/(2\\sqrt{x})$"}],"exam":"ข้อผิดพลาดที่พบบ่อยที่สุดคือกระจาย $(x+h)^2$ ผิด, ลบ $f(x)$ ไม่ครบ, ตัด $h$ ก่อน factor และใช้ Power Rule ทั้งที่โจทย์สั่งห้าม.","memory":"Definition = f(x+h) − f(x) / h → factor/conjugate → cancel h → h→0.","pattern":"Assignment 1 ข้อ 2.2 กำหนด $f(x)=5x-3x^2$ และสั่งหา $f'(x)$ **โดยใช้บทนิยามของอนุพันธ์**.","writeup":"ห้ามข้าม algebra. สำหรับข้อเขียน ควรให้คนตรวจเห็นว่าทำให้ $h$ หายได้อย่างไร.","source":"เนื้อหาส่วนนี้ยึดรูปแบบโจทย์จาก Assignment 1 ภาคเรียนที่ 1/2569 เป็นหลัก ตามข้อมูลที่ผู้ใช้ระบุว่าข้อสอบยึด Assignment และเปลี่ยนตัวเลขหรือรายละเอียดเล็กน้อย","examStatus":"ตรงจาก Assignment 1 ข้อ 2.2"},"mcq":[{"q":"นิยามของอนุพันธ์ $f'(x)$ คือข้อใด","c":["$\\lim_{h\\to0}\\frac{f(x+h)-f(x)}{h}$","$\\lim_{h\\to0}\\frac{f(x)-f(x+h)}{h}$","$\\lim_{h\\to0}\\frac{f(x+h)+f(x)}{h}$","$\\lim_{h\\to\\infty}\\frac{f(x+h)-f(x)}{h}$","$\\frac{f(x+h)-f(x)}{h}$ (ไม่ต้องมีลิมิต)"],"a":0,"ex":"เป็นนิยามมาตรฐานของอนุพันธ์ (difference quotient)"},{"q":"ใช้นิยามหา $f'(x)$ ของ $f(x)=x^2$","c":["$2x$","$x^2$","2","$x$","$2x+h$"],"a":0,"ex":"$\\frac{(x+h)^2-x^2}{h}=\\frac{2xh+h^2}{h}=2x+h\\to2x$ เมื่อ $h\\to0$"},{"q":"ใช้นิยามหา $f'(x)$ ของ $f(x)=3x+5$","c":["3","5","$3x$","0","8"],"a":0,"ex":"ฟังก์ชันเชิงเส้น อนุพันธ์คือความชันคงที่ = 3"},{"q":"ใช้นิยามหา $f'(x)$ ของ $f(x)=\\sqrt{x}$","c":["$\\frac{1}{2\\sqrt x}$","$\\frac{1}{\\sqrt x}$","$\\sqrt x$","$2\\sqrt x$","$\\frac{-1}{2\\sqrt x}$"],"a":0,"ex":"คูณ conjugate: $\\frac{\\sqrt{x+h}-\\sqrt x}{h}\\cdot\\frac{\\sqrt{x+h}+\\sqrt x}{\\sqrt{x+h}+\\sqrt x}=\\frac{h}{h(\\sqrt{x+h}+\\sqrt x)}\\to\\frac{1}{2\\sqrt x}$"},{"q":"ใช้นิยามหา $f'(x)$ ของ $f(x)=1/x$","c":["$-1/x^2$","$1/x^2$","$-1/x$","$1/x$","0"],"a":0,"ex":"$\\frac{1/(x+h)-1/x}{h}=\\frac{-h}{hx(x+h)}=\\frac{-1}{x(x+h)}\\to\\frac{-1}{x^2}$"}],"essay":[{"title":"หาอนุพันธ์ด้วยนิยาม (x³)","points":5,"prompt":"ใช้นิยามของอนุพันธ์ หา $f'(x)$ เมื่อ $f(x)=x^3$","model":"$(x+h)^3=x^3+3x^2h+3xh^2+h^3$\n$$\\frac{f(x+h)-f(x)}{h}=\\frac{3x^2h+3xh^2+h^3}{h}=3x^2+3xh+h^2$$\nเมื่อ $h\\to0$: $f'(x)=3x^2$"},{"title":"หาอนุพันธ์ด้วยนิยาม (เศษส่วน)","points":5,"prompt":"ใช้นิยามของอนุพันธ์ หา $f'(x)$ เมื่อ $f(x)=\\dfrac{1}{x+2}$","model":"$$\\frac{f(x+h)-f(x)}{h}=\\frac{\\frac{1}{x+h+2}-\\frac{1}{x+2}}{h}=\\frac{(x+2)-(x+h+2)}{h(x+h+2)(x+2)}=\\frac{-h}{h(x+h+2)(x+2)}$$\n$$=\\frac{-1}{(x+h+2)(x+2)}\\xrightarrow{h\\to0}\\frac{-1}{(x+2)^2}$$"}],"examStatus":"ตรงจาก Assignment 1 ข้อ 2.2","examKind":"direct","assignmentItems":[["2.2","กำหนด $f(x)=5x-3x^2$ จงหา $f\\prime(x)$ โดยใช้บทนิยามของอนุพันธ์","difference quotient → จัดรูป → ตัด $h$ → ส่ง $h\\to0$","Assignment ห้ามใช้ L'Hôpital"]],"whatChanges":"ฟังก์ชันเปลี่ยนได้ แต่ถ้าคำสั่งว่า “โดยบทนิยาม” ต้องเริ่มจาก difference quotient ทุกครั้ง","cram":{"mustKnow":"Definition = f(x+h) − f(x) / h → factor/conjugate → cancel h → h→0.","recognize":"มีคำว่า 'โดยใช้บทนิยามของอนุพันธ์' → ห้ามข้ามไป $nx^{n-1}$. ต้องเขียน difference quotient ตั้งแต่บรรทัดแรก.","steps":["เขียน definition","หา $f(x+h)$ อย่างระวังวงเล็บ","คำนวณ $f(x+h)-f(x)$","จัดรูปให้มีตัวประกอบ $h$","ตัด $h$","จึงค่อยใช้ $h\\to0$"],"avoid":["ส่ง $h\\to0$ ก่อนจัดรูปให้หารลงตัว ทำให้เจอ $0/0$ ทันที","ลืมกระจาย $f(x+h)$ ให้ครบทุกพจน์ โดยเฉพาะพจน์กำลังสองขึ้นไป"],"writeup":"ห้ามข้าม algebra. สำหรับข้อเขียน ควรให้คนตรวจเห็นว่าทำให้ $h$ หายได้อย่างไร.","assignment":"ตรงจาก Assignment 1 ข้อ 2.2"}},{"name":"กฎการหาอนุพันธ์ — ครบรูปแบบที่ Assignment ใช้","icon":"📐","lesson":{"concept":"เมื่อรู้สูตรอนุพันธ์พื้นฐานแล้ว ไม่ต้องกลับไปใช้นิยามอีก ข้อสอบเน้น Power / Product / Quotient Rule ผสมกับฟังก์ชันตรีโกณ เอ็กซ์โพเนนเชียล และลอการิทึม","formulas":["$\\frac d{dx}x^n=nx^{n-1}$","$\\frac d{dx}(uv)=u'v+uv'$","$\\frac d{dx}(u/v)=\\frac{u'v-uv'}{v^2}$","$\\frac d{dx}f(g(x))=f'(g(x))g'(x)$","$\\frac d{dx}\\ln u=u'/u$","$\\frac d{dx}a^u=a^u\\ln(a)u'$"],"method":["ระบุก่อนว่าโจทย์เป็นผลคูณ ผลหาร หรือพจน์เดี่ยว","หา $u'$ และ $v'$ ของแต่ละส่วนแยกกันก่อนแทนสูตร","แทนสูตรแล้วจัดรูปให้ง่ายที่สุด — ข้อสอบมักให้ตัวเลือกเป็นรูปย่อแล้ว"],"example":{"prompt":"หา $f'(x)$ เมื่อ $f(x)=\\dfrac{2x+1}{x^2+1}$","solution":"$u=2x+1,u'=2;\\ v=x^2+1,v'=2x$ $\\Rightarrow f'(x)=\\dfrac{2(x^2+1)-(2x+1)(2x)}{(x^2+1)^2}=\\dfrac{-2x^2-2x+2}{(x^2+1)^2}$"},"pitfalls":["สลับลำดับ $u'v$ กับ $uv'$ ใน Quotient Rule ทำให้เครื่องหมายผิด","ลืมยกกำลังสองตัวส่วนใน Quotient Rule"],"intuition":"ก่อนดิฟให้ 'อ่านโครงสร้าง' ของฟังก์ชันก่อน: บวก/ลบ, คูณ, หาร, ฟังก์ชันซ้อน หรือฟังก์ชันพิเศษ.","recognize":"$\\sqrt{x}\\cos(2x)$ → Product + Chain; $3x^2/(x^3+1)$ → Quotient; $3^{2x+1}$ → exponential + Chain; $\\ln(x^8+2x)$ → Chain; $t^3\\tan(5t)$ → Product + Chain.","theory":"กฎพื้นฐานต้องใช้ร่วมกันได้: Power, Product, Quotient, Chain, exponential/logarithm และ trig/hyperbolic. จุดสำคัญไม่ใช่จำสูตรแยก ๆ แต่ระบุว่า outer/inner หรือ u/v คืออะไร.","workflow":["วงโครงสร้างหลักของนิพจน์","เลือกกฎชั้นนอก","ดิฟส่วนประกอบ","ใส่ inner derivative ถ้ามี","จัดรูปและตรวจเครื่องหมาย","ถ้าถาม $f''$ หรือ $f'''$ ให้หา derivative ต่อทีละอันดับ"],"deepExamples":[{"title":"Assignment 3.3","prompt":"$\\displaystyle\\frac d{dx}[\\sqrt{x}\\cos(2x)]$","solution":"Product: $\\frac1{2\\sqrt{x}}\\cos(2x)+\\sqrt{x}[-2\\sin(2x)]$.","answer":"$\\frac{\\cos2x}{2\\sqrt{x}}-2\\sqrt{x}\\sin2x$"},{"title":"Assignment 3.4","prompt":"$\\displaystyle\\frac d{dx}\\left(\\frac{3x^2}{x^3+1}\\right)$","solution":"Quotient: $[(6x)(x^3+1)-(3x^2)(3x^2)]/(x^3+1)^2$.","answer":"$\\frac{6x-3x^4}{(x^3+1)^2}$"},{"title":"Assignment 3.6","prompt":"$\\displaystyle\\frac d{dx}\\ln(x^8+2x)$","solution":"Chain: $\\frac{8x^7+2}{x^8+2x}$.","answer":"$\\frac{8x^7+2}{x^8+2x}$"},{"title":"Assignment 3.7","prompt":"$\\displaystyle\\frac d{dt}[t^3\\tan(5t)]$","solution":"Product + Chain: $3t^2\\tan(5t)+t^3[5\\sec^2(5t)]$.","answer":"$3t^2\\tan(5t)+5t^3\\sec^2(5t)$"}],"exam":"Product กับ Quotient สลับกันบ่อย; Chain ต้องไม่ลืม inner derivative; $d(\\ln u)=u'/u$; $d(a^{u})=a^u\\ln(a)u'$.","memory":"คูณ = Product; หาร = Quotient; ซ้อน = Chain; $\\ln u=u'/u$; $a^u=a^u\\ln a\\,u'$.","pattern":"Assignment 1 ข้อ 3 มี 10 ข้อย่อย ครอบคลุม exponential, polynomial, product, quotient, power/chain, logarithm, tangent, hyperbolic cotangent และ higher derivatives.","writeup":"ถ้าเป็น Product/Quotient ให้ระบุ $u,v$ หรือเขียนสูตรก่อนแทน จะลดโอกาสสลับเครื่องหมาย.","source":"เนื้อหาส่วนนี้ยึดรูปแบบโจทย์จาก Assignment 1 ภาคเรียนที่ 1/2569 เป็นหลัก ตามข้อมูลที่ผู้ใช้ระบุว่าข้อสอบยึด Assignment และเปลี่ยนตัวเลขหรือรายละเอียดเล็กน้อย","examStatus":"ตรงจาก Assignment 1 ข้อ 3.1–3.8"},"mcq":[{"q":"$\\dfrac{d}{dx}[x^5]$ เท่ากับข้อใด","c":["$5x^4$","$x^4$","$5x^5$","$x^5/5$","$4x^5$"],"a":0,"ex":"ใช้ Power Rule: $\\frac{d}{dx}x^n=nx^{n-1}$"},{"q":"$\\dfrac{d}{dx}[3x^2\\sin x]$ เท่ากับข้อใด (Product Rule)","c":["$6x\\sin x+3x^2\\cos x$","$6x\\cos x$","$3x^2\\cos x$","$6x\\sin x-3x^2\\cos x$","$6\\sin x+3x^2\\cos x$"],"a":0,"ex":"$(uv)'=u'v+uv'$ โดย $u=3x^2,v=\\sin x$: $6x\\sin x+3x^2\\cos x$"},{"q":"$\\dfrac{d}{dx}\\left[\\dfrac{x^2+1}{x-1}\\right]$ เท่ากับข้อใด (Quotient Rule)","c":["$\\frac{x^2-2x-1}{(x-1)^2}$","$\\frac{2x}{(x-1)^2}$","$\\frac{x^2+2x-1}{(x-1)^2}$","$\\frac{2x(x-1)}{(x-1)^2}$","$\\frac{-x^2-1}{(x-1)^2}$"],"a":0,"ex":"$\\left(\\frac{u}{v}\\right)'=\\frac{u'v-uv'}{v^2}=\\frac{2x(x-1)-(x^2+1)}{(x-1)^2}=\\frac{x^2-2x-1}{(x-1)^2}$"},{"q":"$\\dfrac{d}{dx}[e^x\\cos x]$ เท่ากับข้อใด","c":["$e^x(\\cos x-\\sin x)$","$e^x\\cos x$","$-e^x\\sin x$","$e^x(\\cos x+\\sin x)$","$e^x\\sin x$"],"a":0,"ex":"$e^x\\cos x+e^x(-\\sin x)=e^x(\\cos x-\\sin x)$"},{"q":"$\\dfrac{d}{dx}\\left[\\dfrac{\\ln x}{x}\\right]$ เท่ากับข้อใด","c":["$\\frac{1-\\ln x}{x^2}$","$\\frac{1}{x^2}$","$\\frac{\\ln x}{x^2}$","$\\frac{1+\\ln x}{x^2}$","$\\frac{1}{x}$"],"a":0,"ex":"Quotient Rule: $\\frac{(1/x)(x)-\\ln x(1)}{x^2}=\\frac{1-\\ln x}{x^2}$"}],"essay":[{"title":"Product Rule กับพหุนาม","points":5,"prompt":"จงหาอนุพันธ์ของ $f(x)=(3x^2-1)(x^3+2x)$ โดยใช้ Product Rule","model":"$u=3x^2-1,\\ u'=6x$; $v=x^3+2x,\\ v'=3x^2+2$\n$$f'(x)=6x(x^3+2x)+(3x^2-1)(3x^2+2)$$\n$$=6x^4+12x^2+9x^4+6x^2-3x^2-2=15x^4+15x^2-2$$\n(ตรวจสอบ: กระจาย $f(x)=3x^5+5x^3-2x$ แล้วหา $f'=15x^4+15x^2-2$ ได้คำตอบตรงกัน)"},{"title":"Product Rule กับตรีโกณมิติ","points":5,"prompt":"จงหาอนุพันธ์ของ $f(x)=x^2\\tan x$","model":"$u=x^2,\\ u'=2x$; $v=\\tan x,\\ v'=\\sec^2x$\n$$f'(x)=2x\\tan x+x^2\\sec^2x$$"}],"examStatus":"ตรงจาก Assignment 1 ข้อ 3.1–3.8","examKind":"direct","assignmentItems":[["3.1","จงหา $\\frac{d}{dx}(e^{2569})$","มอง $e^{2569}$ เป็นค่าคงที่","constant derivative = 0"],["3.2","จงหา $\\frac{d}{dx}(5x^4-4x^2+3)$","Power Rule ทีละพจน์","ระวังเลขชี้กำลังและสัมประสิทธิ์"],["3.3","จงหา $\\frac{d}{dx}(\\sqrt{x}\\cos(2x))$","Product Rule + Chain Rule","ห้ามดิฟแค่ factor เดียว"],["3.4","จงหา $\\frac{d}{dx}(\\frac{3x^2}{x^3+1})$","Quotient Rule","ตัวส่วนต้องยกกำลัง 2"],["3.5","จงหา $\\frac{d}{dx}(3^{2x+1})$","Exponential + Chain Rule","ต้องคูณอนุพันธ์ของ $2x+1$"],["3.6","จงหา $\\frac{d}{dx}(\\ln(x^8+2x))$","Log derivative + Chain Rule","อนุพันธ์ข้างในต้องคูณ"],["3.7","จงหา $\\frac{d}{dt}(t^3\\tan(5t))$","Product Rule + Chain Rule","$\\tan(5t)$ ต้องได้ $5\\sec^2(5t)$"],["3.8","จงหา $\\frac{d}{dx}(\\coth(\\pi x))$","hyperbolic derivative + Chain Rule","ต้องมี factor $\\pi$"],["3.9","หา $f^{\\prime\\prime}(0)$ เมื่อ $f(t)=\\cos(2t)$","หาอนุพันธ์สองครั้งแล้วแทน $0$","อย่าหยุดที่ $f\\prime$"],["3.10","หา $f^{\\prime\\prime\\prime}(0)$ เมื่อ $f(x)=e^{-3x}$","หาอนุพันธ์สามครั้ง","ทุกครั้งจะคูณด้วย $-3$"]],"whatChanges":"เลขชี้กำลัง, coefficients, base, argument และฟังก์ชันด้านในเปลี่ยนได้ แต่เลือก rule จากโครงสร้างเดิม","cram":{"mustKnow":"คูณ = Product; หาร = Quotient; ซ้อน = Chain; $\\ln u=u'/u$; $a^u=a^u\\ln a\\,u'$.","recognize":"$\\sqrt{x}\\cos(2x)$ → Product + Chain; $3x^2/(x^3+1)$ → Quotient; $3^{2x+1}$ → exponential + Chain; $\\ln(x^8+2x)$ → Chain; $t^3\\tan(5t)$ → Product + Chain.","steps":["วงโครงสร้างหลักของนิพจน์","เลือกกฎชั้นนอก","ดิฟส่วนประกอบ","ใส่ inner derivative ถ้ามี","จัดรูปและตรวจเครื่องหมาย","ถ้าถาม $f''$ หรือ $f'''$ ให้หา derivative ต่อทีละอันดับ"],"avoid":["สลับลำดับ $u'v$ กับ $uv'$ ใน Quotient Rule ทำให้เครื่องหมายผิด","ลืมยกกำลังสองตัวส่วนใน Quotient Rule"],"writeup":"ถ้าเป็น Product/Quotient ให้ระบุ $u,v$ หรือเขียนสูตรก่อนแทน จะลดโอกาสสลับเครื่องหมาย.","assignment":"ตรงจาก Assignment 1 ข้อ 3.1–3.8"}},{"name":"อนุพันธ์อันดับสูง + สมการอิงตัวแปรเสริม","icon":"🔺","lesson":{"concept":"อนุพันธ์อันดับสูงคือการหาอนุพันธ์ซ้ำหลายรอบ โจทย์เน้นความไวและการมองแพทเทิร์นของฟังก์ชันตรีโกณ (วนซ้ำทุก 4 อันดับ) หรือเอ็กซ์โพเนนเชียล (คูณค่าคงที่ทบไปเรื่อย ๆ)","formulas":["$\\sin x\\to\\cos x\\to-\\sin x\\to-\\cos x\\to\\sin x$ วนซ้ำทุก 4 อันดับ","$\\dfrac{d^n}{dx^n}e^{kx}=k^ne^{kx}$"],"method":["หาอนุพันธ์ทีละอันดับอย่างมีระบบ อย่าข้ามขั้นตอนแม้จะดูซ้ำ ๆ","ถ้าอันดับสูงมาก (เช่นอันดับ 10, 20) ให้หาแพทเทิร์นการวนซ้ำแทนการหาทีละครั้งจนครบ"],"example":{"prompt":"กำหนด $f(x)=\\cos x$ จงหา $f^{(6)}(x)$","solution":"แพทเทิร์นวนทุก 4 อันดับ: อันดับ 4 กลับมาเป็น $\\cos x$ อันดับ 6 = อันดับ $(4+2)$ = $-\\cos x$"},"pitfalls":["นับอันดับผิดพลาดตอนไล่แพทเทิร์นการวนซ้ำ","ลืมว่าค่าคงที่ในฟังก์ชันประกอบ (เช่น $e^{2x}$) ต้องคูณทบทุกครั้งที่หาอนุพันธ์ (ตาม Chain Rule)"],"intuition":"อย่าหยุดที่ derivative แรก. Higher derivative คือการดิฟซ้ำ ส่วน parametric ต้องมอง $t$ เป็นตัวแปรตัวกลาง.","recognize":"เห็น $f''(0)$ → หาอย่างน้อย 2 ครั้งก่อนแทน 0. เห็น parametric → หา $dx/dt$, $dy/dt$ ก่อน. ถ้าถาม second derivative → ห้ามดิฟ $dy/dx$ ตรง ๆ ด้วย x เพราะยังมี t.","theory":"ถ้า $x=x(t),y=y(t)$ แล้ว $\\frac{dy}{dx}=\\frac{dy/dt}{dx/dt}$. สำหรับอันดับสอง $\\frac{d^2y}{dx^2}=\\frac{d}{dt}(dy/dx)\\big/\\frac{dx}{dt}$. ใน higher derivatives ของ trig/exponential ให้คุม pattern และเครื่องหมาย.","workflow":["Higher: หา $f'$, ต่อด้วย $f''$ หรือ $f'''$, แล้วค่อยแทนจุด","Parametric: หา $dx/dt$ และ $dy/dt$","สร้าง $dy/dx$","จัดรูปก่อนแทน t","ถ้าหา $y''$: ดิฟ $dy/dx$ เทียบ t แล้วหารด้วย $dx/dt$"],"deepExamples":[{"title":"Assignment 3.9","prompt":"$f(t)=\\cos(2t)$ หา $f''(0)$","solution":"$f'=-2\\sin2t$, $f''=-4\\cos2t$, ดังนั้นที่ 0 คือ -4.","answer":"$-4$"},{"title":"Assignment 3.10","prompt":"$f(x)=e^{-3x}$ หา $f'''(0)$","solution":"$f'=-3e^{-3x}$, $f''=9e^{-3x}$, $f'''=-27e^{-3x}$ → ที่ 0 = -27.","answer":"$-27$"},{"title":"Assignment 4.2","prompt":"$x=3t+1,\\ y=1-5t^3$ หา $dy/dx$ และ $d^2y/dx^2$ ที่ $t=1$","solution":"$dx/dt=3$, $dy/dt=-15t^2$ → $dy/dx=-5t^2$, ดิฟเทียบ t ได้ $-10t$ แล้วหาร 3 → $-10t/3$. ที่ 1 ได้ $-5$ และ $-10/3$.","answer":"$dy/dx=-5,\\ y''=-10/3$"}],"exam":"ข้อสองชั้นคือกับดัก: ใน parametric second derivative ต้องหารด้วย $dx/dt$ อีกครั้ง. Higher derivative ต้องคุมเครื่องหมาย.","memory":"Parametric: $y_x=y_t/x_t$. Second: $(d/dt)(y_x)\\,/x_t$. Higher: ดิฟซ้ำแล้วค่อยแทน.","pattern":"Assignment 1 ข้อ 3.9–3.10 ถาม $f''(0)$ และ $f'''(0)$; ข้อ 4.1–4.2 ใช้ parametric และถาม $dy/dt$, $dy/dx$, $d^2y/dx^2$.","writeup":"อย่ากระโดดจากสูตรไปคำตอบ. แสดง $dx/dt$, $dy/dt$, แล้วจึงสร้าง $dy/dx$; สำหรับอันดับสองแสดงขั้นกลาง.","source":"เนื้อหาส่วนนี้ยึดรูปแบบโจทย์จาก Assignment 1 ภาคเรียนที่ 1/2569 เป็นหลัก ตามข้อมูลที่ผู้ใช้ระบุว่าข้อสอบยึด Assignment และเปลี่ยนตัวเลขหรือรายละเอียดเล็กน้อย","examStatus":"ตรงจาก Assignment 1 ข้อ 3.9–3.10 และ 4.1"},"mcq":[{"q":"$f(x)=x^4-3x^2+5$ หา $f''(x)$","c":["$12x^2-6$","$4x^3-6x$","$12x^2$","$6x^2-6$","$12x-6$"],"a":0,"ex":"$f'=4x^3-6x$, $f''=12x^2-6$"},{"q":"$f(x)=\\sin x$ หา $f'''(x)$","c":["$-\\cos x$","$\\cos x$","$-\\sin x$","$\\sin x$","0"],"a":0,"ex":"$f'=\\cos x, f''=-\\sin x, f'''=-\\cos x$"},{"q":"$f(x)=e^{2x}$ หา $f''(x)$","c":["$4e^{2x}$","$2e^{2x}$","$e^{2x}$","$8e^{2x}$","$e^{4x}$"],"a":0,"ex":"$f'=2e^{2x}, f''=4e^{2x}$"},{"q":"$f(x)=\\ln x$ หา $f''(x)$","c":["$-1/x^2$","$1/x^2$","$-1/x$","$1/x$","0"],"a":0,"ex":"$f'=1/x=x^{-1}, f''=-x^{-2}=-1/x^2$"},{"q":"$f(x)=x^3$ หาอนุพันธ์อันดับที่ 4 ($f^{(4)}(x)$)","c":["0","6","6x","$3x^2$","$x$"],"a":0,"ex":"$f'=3x^2,f''=6x,f'''=6,f^{(4)}=0$"}],"essay":[{"title":"อนุพันธ์อันดับสองและสาม","points":5,"prompt":"กำหนด $f(x)=x^5-4x^3+2x$ จงหา $f''(x)$ และ $f'''(x)$","model":"$f'(x)=5x^4-12x^2+2$\n$f''(x)=20x^3-24x$\n$f'''(x)=60x^2-24$"},{"title":"ความเร็วและความเร่งจากตำแหน่ง","points":5,"prompt":"กำหนดตำแหน่งวัตถุ $s(t)=t^3-6t^2+9t$ จงหาความเร็ว $v(t)$ ความเร่ง $a(t)$ และเวลาที่ความเร่งเป็นศูนย์","model":"$v(t)=s'(t)=3t^2-12t+9$\n$a(t)=v'(t)=6t-12$\nให้ $a(t)=0$: $6t-12=0\\Rightarrow t=2$ วินาที"}],"examStatus":"ตรงจาก Assignment 1 ข้อ 3.9–3.10 และ 4.1","examKind":"direct","assignmentItems":[["4.1","กำหนด $y=u^2+1$, $u=e^{x/2}$ และ $x=\\sin t$ จงหา $\\left.\\frac{dy}{dt}\\right|_{t=\\pi}$","Chain Rule หลายชั้น: $dy/du\\cdot du/dx\\cdot dx/dt$","ต้องแทน $t=\\pi$ ท้ายสุด"]],"whatChanges":"สมการ parametric และค่าของ t เปลี่ยนได้ แต่ลำดับการหา derivative ยังคงเดิม","cram":{"mustKnow":"Parametric: $y_x=y_t/x_t$. Second: $(d/dt)(y_x)\\,/x_t$. Higher: ดิฟซ้ำแล้วค่อยแทน.","recognize":"เห็น $f''(0)$ → หาอย่างน้อย 2 ครั้งก่อนแทน 0. เห็น parametric → หา $dx/dt$, $dy/dt$ ก่อน. ถ้าถาม second derivative → ห้ามดิฟ $dy/dx$ ตรง ๆ ด้วย x เพราะยังมี t.","steps":["Higher: หา $f'$, ต่อด้วย $f''$ หรือ $f'''$, แล้วค่อยแทนจุด","Parametric: หา $dx/dt$ และ $dy/dt$","สร้าง $dy/dx$","จัดรูปก่อนแทน t","ถ้าหา $y''$: ดิฟ $dy/dx$ เทียบ t แล้วหารด้วย $dx/dt$"],"avoid":["นับอันดับผิดพลาดตอนไล่แพทเทิร์นการวนซ้ำ","ลืมว่าค่าคงที่ในฟังก์ชันประกอบ (เช่น $e^{2x}$) ต้องคูณทบทุกครั้งที่หาอนุพันธ์ (ตาม Chain Rule)"],"writeup":"อย่ากระโดดจากสูตรไปคำตอบ. แสดง $dx/dt$, $dy/dt$, แล้วจึงสร้าง $dy/dx$; สำหรับอันดับสองแสดงขั้นกลาง.","assignment":"ตรงจาก Assignment 1 ข้อ 3.9–3.10 และ 4.1"}},{"name":"Chain Rule — ฟังก์ชันซ้อนและอนุพันธ์ที่ซ่อนอยู่","icon":"🌿","lesson":{"concept":"Logarithmic Differentiation ใช้เมื่อฐานและเลขชี้กำลังมีตัวแปร $x$ ทั้งคู่ (เช่น $x^x$) หรือฟังก์ชันเป็นผลคูณ/ผลหารของหลายพจน์ยกกำลัง ซึ่งถ้าใช้ Product/Quotient Rule ตรง ๆ จะซับซ้อนมาก","formulas":["ใส่ $\\ln$ ทั้งสองข้างของ $y=f(x)$ แล้วหาอนุพันธ์: $\\dfrac{y'}{y}=\\dfrac{d}{dx}[\\ln y]$","$y'=y\\cdot\\dfrac{d}{dx}[\\ln y]$"],"method":["ใส่ $\\ln$ ทั้งสองข้างของสมการ $y=f(x)$","ใช้สมบัติของ log กระจายผลคูณ/ผลหาร/เลขชี้กำลังออกเป็นการบวก-ลบ-คูณ","หาอนุพันธ์ทั้งสองข้าง (ข้างซ้ายได้ $y'/y$ จาก Chain Rule)","คูณ $y$ กลับทั้งสองข้าง แล้วแทน $y$ ด้วยฟังก์ชันเดิมกลับเข้าไป"],"example":{"prompt":"กำหนด $y=(x+1)^x$ จงหา $dy/dx$","solution":"$\\ln y=x\\ln(x+1)\\Rightarrow\\dfrac{y'}{y}=\\ln(x+1)+\\dfrac{x}{x+1}\\Rightarrow y'=(x+1)^x\\left[\\ln(x+1)+\\dfrac{x}{x+1}\\right]$"},"pitfalls":["ลืมคูณ $y$ กลับหลังหาอนุพันธ์ทั้งสองข้าง (ตอบแค่ $y'/y$ ไม่ใช่ $y'$)","ลืมใช้ Chain Rule ตอนหาอนุพันธ์ $\\ln y$ ทางฝั่งซ้าย"],"intuition":"Chain Rule คือ 'อนุพันธ์ของชั้นนอก × อนุพันธ์ของชั้นใน'. ถ้ามีหลายชั้น ให้คูณต่อจนถึงตัวแปรสุดท้าย.","recognize":"วงเล็บยกกำลัง, trig ของนิพจน์, log ของนิพจน์, exponential ที่เลขชี้กำลังไม่ใช่ x ตรง ๆ = Chain.","theory":"$\\frac d{dx}f(g(x))=f'(g(x))g'(x)$. ตัวอย่างเช่น $\\ln(g)$ ให้ $g'/g$, $\\tan(g)$ ให้ $\\sec^2(g)g'$, $a^{g}$ ให้ $a^g\\ln(a)g'$.","workflow":["กำหนด inner function $u$","ดิฟ outer โดยยังเก็บ $u$ ไว้","คูณ $u'$","ถ้ามีหลายชั้นทำซ้ำ","ตรวจว่ามี inner derivative ครบทุกชั้น"],"deepExamples":[{"title":"Assignment 3.5","prompt":"$\\displaystyle\\frac d{dx}(3^{2x+1})$","solution":"ให้ $u=2x+1$. ได้ $3^u\\ln3\\cdot2$.","answer":"$2\\ln3\\,3^{2x+1}$"},{"title":"Assignment 3.6","prompt":"$\\displaystyle\\frac d{dx}\\ln(x^8+2x)$","solution":"ให้ $u=x^8+2x$, ได้ $u'/u$.","answer":"$\\frac{8x^7+2}{x^8+2x}$"},{"title":"Assignment 3.7","prompt":"$\\displaystyle\\frac d{dt}[t^3\\tan(5t)]$","solution":"Product + Chain พร้อมกัน.","answer":"$3t^2\\tan5t+5t^3\\sec^2(5t)$"},{"title":"หลายชั้น","prompt":"$\\frac d{dx}e^{\\sin(x^2)}$","solution":"ชั้นนอก $e^u$, กลาง $\\sin v$, ใน $x^2$ → $e^{\\sin(x^2)}\\cos(x^2)2x$.","answer":"$2xe^{\\sin(x^2)}\\cos(x^2)$"}],"exam":"ลืม inner derivative คือความผิดพลาดอันดับหนึ่ง. อีกจุดคือจำ $\\ln u$ เป็น $1/u$ แล้วลืมคูณ $u'$.","memory":"Outside × inside'. วงชั้นจากนอกเข้าในแล้วคูณอนุพันธ์ทุกชั้น.","pattern":"แม้ Assignment ไม่แยกชื่อ Chain Rule เป็นข้อเดี่ยว แต่หลายข้อในข้อ 3 เป็น Chain โดยตรง เช่น $3^{2x+1}$, $\\ln(x^8+2x)$, $\\tan(5t)$ และ composition ในข้อ 4.1.","writeup":"ถ้าโจทย์ซ้อนหลายชั้น ให้เขียน $u=...$ สั้น ๆ ก่อน แล้วแทนกลับตอนจบ.","source":"เนื้อหาส่วนนี้ยึดรูปแบบโจทย์จาก Assignment 1 ภาคเรียนที่ 1/2569 เป็นหลัก ตามข้อมูลที่ผู้ใช้ระบุว่าข้อสอบยึด Assignment และเปลี่ยนตัวเลขหรือรายละเอียดเล็กน้อย","examStatus":"อยู่ในข้อ 3 โดยเป็น Chain Rule ที่ซ่อนอยู่"},"mcq":[{"q":"$y=x^x$ ใช้ Logarithmic Differentiation ได้ $y'$ เท่าใด","c":["$x^x(\\ln x+1)$","$x\\cdot x^{x-1}$","$x^x\\ln x$","$x^{x-1}$","$x^x/x$"],"a":0,"ex":"$\\ln y=x\\ln x\\Rightarrow y'/y=\\ln x+1\\Rightarrow y'=x^x(\\ln x+1)$"},{"q":"$y=x^{1/x}$ หา $y'$","c":["$x^{1/x}\\cdot\\frac{1-\\ln x}{x^2}$","$x^{1/x}\\cdot\\frac{\\ln x}{x^2}$","$x^{1/x-1}/x$","$x^{1/x}\\cdot\\frac{1}{x^2}$","$\\frac{1}{x^2}$"],"a":0,"ex":"$\\ln y=\\frac{\\ln x}{x}\\Rightarrow y'/y=\\frac{1-\\ln x}{x^2}\\Rightarrow y'=x^{1/x}\\cdot\\frac{1-\\ln x}{x^2}$"},{"q":"เทคนิคใดที่ใช้เมื่อทั้งฐานและเลขชี้กำลังมี $x$ อยู่ด้วยกัน","c":["Logarithmic Differentiation","Chain Rule เท่านั้น","Quotient Rule","การแทนค่าตรงๆ","Power Rule ธรรมดา"],"a":0,"ex":"เมื่อฐานและเลขชี้กำลังต่างมี $x$ (เช่น $x^x$, $(\\sin x)^x$) ต้องใช้ Logarithmic Differentiation"},{"q":"$y=(\\sin x)^x$ หา $y'$","c":["$(\\sin x)^x[\\ln(\\sin x)+x\\cot x]$","$x(\\sin x)^{x-1}\\cos x$","$(\\sin x)^x\\ln(\\sin x)$","$(\\sin x)^x\\cot x$","$x\\cos x$"],"a":0,"ex":"$\\ln y=x\\ln(\\sin x)\\Rightarrow y'/y=\\ln(\\sin x)+x\\cot x$"},{"q":"$\\dfrac{d}{dx}[2^x]$ เท่ากับข้อใด","c":["$2^x\\ln 2$","$x2^{x-1}$","$2^x$","$\\ln 2$","$2^x/\\ln2$"],"a":0,"ex":"เลขชี้กำลังฐานคงที่ ใช้สูตร $\\frac{d}{dx}a^x=a^x\\ln a$"}],"essay":[{"title":"Log Differentiation: ฐานและเลขชี้กำลังเป็น x","points":5,"prompt":"ใช้ Logarithmic Differentiation หา $dy/dx$ เมื่อ $y=x^{\\cos x}$","model":"$\\ln y=\\cos x\\ln x$\n$$\\frac{y'}{y}=-\\sin x\\ln x+\\frac{\\cos x}{x}$$\n$$y'=x^{\\cos x}\\left[\\frac{\\cos x}{x}-\\sin x\\ln x\\right]$$"},{"title":"Log Differentiation: ผลคูณ/ผลหารซับซ้อน","points":5,"prompt":"ใช้ Logarithmic Differentiation หา $dy/dx$ เมื่อ $y=\\dfrac{(x+1)^3(x-2)^2}{\\sqrt{x^2+1}}$","model":"$\\ln y=3\\ln(x+1)+2\\ln(x-2)-\\tfrac12\\ln(x^2+1)$\n$$\\frac{y'}{y}=\\frac{3}{x+1}+\\frac{2}{x-2}-\\frac{x}{x^2+1}$$\n$$y'=\\frac{(x+1)^3(x-2)^2}{\\sqrt{x^2+1}}\\left[\\frac{3}{x+1}+\\frac{2}{x-2}-\\frac{x}{x^2+1}\\right]$$"}],"examStatus":"อยู่ในข้อ 3 โดยเป็น Chain Rule ที่ซ่อนอยู่","examKind":"embedded","assignmentItems":[["3.3","จาก Assignment 3.3: $\frac{d}{dx}(\\sqrt{x}\\cos(2x))$","Product Rule + Chain Rule","ต้องดิฟทั้งสอง factor"],["3.5","จาก Assignment 3.5: $\frac{d}{dx}(3^{2x+1})$","Exponential + Chain Rule","ต้องคูณ inner derivative"],["3.6","จาก Assignment 3.6: $\frac{d}{dx}\\ln(x^8+2x)$","Log + Chain Rule","ต้องดิฟ argument"],["3.7–3.8","จาก Assignment 3.7–3.8: trigonometric/hyperbolic compositions","Chain Rule","อย่าลืม inner derivative"]],"whatChanges":"ฐาน/เลขชี้กำลัง/ตัวประกอบของฟังก์ชันเปลี่ยนได้ แต่ logarithmic differentiation ต้องทำ ln แล้วดิฟ","cram":{"mustKnow":"Outside × inside'. วงชั้นจากนอกเข้าในแล้วคูณอนุพันธ์ทุกชั้น.","recognize":"วงเล็บยกกำลัง, trig ของนิพจน์, log ของนิพจน์, exponential ที่เลขชี้กำลังไม่ใช่ x ตรง ๆ = Chain.","steps":["กำหนด inner function $u$","ดิฟ outer โดยยังเก็บ $u$ ไว้","คูณ $u'$","ถ้ามีหลายชั้นทำซ้ำ","ตรวจว่ามี inner derivative ครบทุกชั้น"],"avoid":["ลืมคูณ $y$ กลับหลังหาอนุพันธ์ทั้งสองข้าง (ตอบแค่ $y'/y$ ไม่ใช่ $y'$)","ลืมใช้ Chain Rule ตอนหาอนุพันธ์ $\\ln y$ ทางฝั่งซ้าย"],"writeup":"ถ้าโจทย์ซ้อนหลายชั้น ให้เขียน $u=...$ สั้น ๆ ก่อน แล้วแทนกลับตอนจบ.","assignment":"อยู่ในข้อ 3 โดยเป็น Chain Rule ที่ซ่อนอยู่"}},{"name":"Logarithmic Differentiation — โจทย์ผลคูณ/กำลังซับซ้อน","icon":"🌀","lesson":{"concept":"อนุพันธ์แบบแฝง (implicit) ใช้เมื่อ $y$ เขียนแยกจาก $x$ ตรง ๆ ไม่ได้ (สมการปนกันทั้ง $x,y$) หาอนุพันธ์ทั้งสองข้างของสมการเทียบ $x$ โดยถือว่า $y$ เป็นฟังก์ชันของ $x$ — ทุกครั้งที่หาอนุพันธ์พจน์ที่มี $y$ ต้องคูณ $y'$ ตาม Chain Rule","formulas":["$\\dfrac{d}{dx}[y^n]=ny^{n-1}y'$","$\\dfrac{d}{dx}[xy]=y+xy'$ (Product Rule เมื่อมีทั้ง $x$ และ $y$)"],"method":["หาอนุพันธ์ทีละพจน์ของสมการทั้งสองข้าง เทียบ $x$","ทุกครั้งที่เจอ $y$ ให้คูณ $y'$ ต่อท้ายเสมอ (Chain Rule)","ย้ายทุกพจน์ที่มี $y'$ มารวมไว้ด้านเดียวกัน แล้วแยกตัวประกอบ $y'$ ออกมา","หารเพื่อให้เหลือ $y'$ เดี่ยว ๆ"],"example":{"prompt":"กำหนด $x^2y+y^3=5$ จงหา $dy/dx$","solution":"$2xy+x^2y'+3y^2y'=0 \\Rightarrow y'(x^2+3y^2)=-2xy \\Rightarrow y'=\\dfrac{-2xy}{x^2+3y^2}$"},"pitfalls":["ลืมคูณ $y'$ เวลาหาอนุพันธ์พจน์ที่มี $y$","ลืมใช้ Product Rule กับพจน์ที่มีทั้ง $x$ และ $y$ ผสมกัน เช่น $xy$"],"intuition":"Logarithm เปลี่ยนการคูณเป็นบวก การหารเป็นลบ และเลขชี้กำลังลงมา ทำให้ฟังก์ชันที่ดิฟตรง ๆ ยุ่งยากกลายเป็นสมการที่จัดการง่าย.","recognize":"เห็นผลคูณ/ผลหารหลายตัวและมี powers, roots, exponentials ปนกัน หรือโจทย์สั่ง 'ใช้ลอการิทึม' ให้ใช้วิธีนี้.","theory":"ตั้ง $y=f(x)$ → ใส่ $\\ln$ → ใช้ log laws → ดิฟทั้งสองข้าง → ได้ $y'/y$ → คูณด้วย $y$. ห้ามลืม Chain Rule ใน $\\ln(3x+5)$ และ $2x$ ใน $e^{2x}$.","workflow":["ตั้ง $y=...$","ใส่ $\\ln$ สองข้าง","แตก log: product → +, quotient → −, power → coefficient","ดิฟเทียบ x","แก้ $y'$ โดยคูณ y","แทน y กลับและจัดรูป"],"deepExamples":[{"title":"ตรงกับ Assignment 5.1","prompt":"$\\displaystyle f(x)=\\frac{x^4e^{2x}}{\\sqrt{3x+5}}$","solution":"$\\ln y=4\\ln x+2x-\\frac12\\ln(3x+5)$. ดังนั้น $y'/y=4/x+2-3/[2(3x+5)]$. คูณด้วย y.","answer":"$f'(x)=\\frac{x^4e^{2x}}{\\sqrt{3x+5}}\\left(\\frac4x+2-\\frac3{2(3x+5)}\\right)$"},{"title":"ฐานและเลขชี้กำลังซับซ้อน","prompt":"$y=x^x$","solution":"$\\ln y=x\\ln x$ → $y'/y=\\ln x+1$.","answer":"$x^x(\\ln x+1)$"},{"title":"หลายตัวประกอบ","prompt":"$y=\\frac{(x^2+1)^3e^x}{\\sqrt{x-1}}$","solution":"แตก log แล้วดิฟแต่ละส่วน ก่อนคูณ y กลับ.","answer":"$y[6x/(x^2+1)+1-1/(2(x-1))]$"}],"exam":"ห้ามลืมคูณ y ตอนท้าย; $\\ln(uv)$ ต้องเป็นผลบวก; $\\ln(u^n)=n\\ln u$; Chain Rule ยังอยู่.","memory":"ln → แตก → ดิฟ → ได้ $y'/y$ → คูณ y กลับ.","pattern":"Assignment 1 ข้อ 5.1 ให้ $f(x)=\\frac{x^4e^{2x}}{\\sqrt{3x+5}}$ และสั่งหาอนุพันธ์โดยใช้ลอการิทึม.","writeup":"ให้เขียนบรรทัด $\\ln y=...$ ชัด ๆ เพราะเป็นหลักฐานว่าทำตามวิธีที่โจทย์สั่ง.","source":"เนื้อหาส่วนนี้ยึดรูปแบบโจทย์จาก Assignment 1 ภาคเรียนที่ 1/2569 เป็นหลัก ตามข้อมูลที่ผู้ใช้ระบุว่าข้อสอบยึด Assignment และเปลี่ยนตัวเลขหรือรายละเอียดเล็กน้อย","examStatus":"ตรงจาก Assignment 1 ข้อ 5.1"},"mcq":[{"q":"$x^2+y^2=25$ หา $dy/dx$ โดยอนุพันธ์แฝง","c":["$-x/y$","$x/y$","$-y/x$","$y/x$","$-2x$"],"a":0,"ex":"$2x+2yy'=0\\Rightarrow y'=-x/y$"},{"q":"จากข้อข้างต้น ($x^2+y^2=25$) ความชันที่จุด $(3,4)$ เท่าใด","c":["$-3/4$","$3/4$","$-4/3$","$4/3$","$-1$"],"a":0,"ex":"$y'=-x/y=-3/4$ ที่จุด $(3,4)$"},{"q":"$xy+y^2=6$ หา $dy/dx$","c":["$\\frac{-y}{x+2y}$","$\\frac{y}{x+2y}$","$\\frac{-x}{x+2y}$","$\\frac{-y}{2y}$","$\\frac{x-y}{x+2y}$"],"a":0,"ex":"$y+xy'+2yy'=0\\Rightarrow y'(x+2y)=-y\\Rightarrow y'=\\frac{-y}{x+2y}$"},{"q":"$x^3+y^3=9$ ความชันที่จุด $(1,2)$ เท่าใด","c":["$-1/4$","$1/4$","$-4$","$4$","$-1/2$"],"a":0,"ex":"$3x^2+3y^2y'=0\\Rightarrow y'=-x^2/y^2=-1/4$ ที่ $(1,2)$"},{"q":"$\\sin(xy)=x$ หา $dy/dx$","c":["$\\frac{1-y\\cos(xy)}{x\\cos(xy)}$","$\\frac{1}{x\\cos(xy)}$","$\\frac{y}{x}$","$\\cos(xy)$","$\\frac{1-y}{x}$"],"a":0,"ex":"$\\cos(xy)(y+xy')=1\\Rightarrow y'=\\frac{1-y\\cos(xy)}{x\\cos(xy)}$"}],"essay":[{"title":"หาความชันด้วยอนุพันธ์แฝง","points":5,"prompt":"กำหนด $x^2y-y^2=3$ จงหา $dy/dx$ ในรูปทั่วไป แล้วหาความชันที่จุด $(2,1)$","model":"ตรวจสอบจุด: $4(1)-1=3$ ✓ อยู่บนเส้นโค้ง\n$$2xy+x^2y'-2yy'=0\\Rightarrow y'(x^2-2y)=-2xy\\Rightarrow y'=\\frac{-2xy}{x^2-2y}$$\nที่ $(2,1)$: $y'=\\dfrac{-2(2)(1)}{4-2}=\\dfrac{-4}{2}=-2$"},{"title":"สมการเส้นสัมผัสเส้นโค้ง","points":5,"prompt":"จงหาสมการเส้นสัมผัสเส้นโค้ง $x^2+xy+y^2=7$ ที่จุด $(1,2)$","model":"ตรวจสอบจุด: $1+2+4=7$ ✓\n$$2x+y+xy'+2yy'=0\\Rightarrow y'(x+2y)=-(2x+y)\\Rightarrow y'=\\frac{-(2x+y)}{x+2y}$$\nที่ $(1,2)$: $y'=\\dfrac{-(2+2)}{1+4}=\\dfrac{-4}{5}$\nสมการเส้นสัมผัส: $y-2=-\\dfrac45(x-1)$"}],"examStatus":"ตรงจาก Assignment 1 ข้อ 5.1","examKind":"direct","assignmentItems":[["3.3","จาก Assignment 3.3: $\frac{d}{dx}(\\sqrt{x}\\cos(2x))$","Product Rule + Chain Rule","ต้องดิฟทั้งสอง factor"],["3.5","จาก Assignment 3.5: $\frac{d}{dx}(3^{2x+1})$","Exponential + Chain Rule","ต้องคูณ inner derivative"],["3.6","จาก Assignment 3.6: $\frac{d}{dx}\\ln(x^8+2x)$","Log + Chain Rule","ต้องดิฟ argument"],["3.7–3.8","จาก Assignment 3.7–3.8: trigonometric/hyperbolic compositions","Chain Rule","อย่าลืม inner derivative"]],"whatChanges":"ตัวเลขและสถานการณ์เปลี่ยนได้ แต่ related rates ต้องดิฟก่อนแทนค่า; approximation ต้องเลือกจุดฐานใกล้และง่าย","cram":{"mustKnow":"ln → แตก → ดิฟ → ได้ $y'/y$ → คูณ y กลับ.","recognize":"เห็นผลคูณ/ผลหารหลายตัวและมี powers, roots, exponentials ปนกัน หรือโจทย์สั่ง 'ใช้ลอการิทึม' ให้ใช้วิธีนี้.","steps":["ตั้ง $y=...$","ใส่ $\\ln$ สองข้าง","แตก log: product → +, quotient → −, power → coefficient","ดิฟเทียบ x","แก้ $y'$ โดยคูณ y","แทน y กลับและจัดรูป"],"avoid":["ลืมคูณ $y'$ เวลาหาอนุพันธ์พจน์ที่มี $y$","ลืมใช้ Product Rule กับพจน์ที่มีทั้ง $x$ และ $y$ ผสมกัน เช่น $xy$"],"writeup":"ให้เขียนบรรทัด $\\ln y=...$ ชัด ๆ เพราะเป็นหลักฐานว่าทำตามวิธีที่โจทย์สั่ง.","assignment":"ตรงจาก Assignment 1 ข้อ 5.1"}},{"name":"Implicit Differentiation + เส้นสัมผัส/เส้นปกติ","icon":"⛓️","lesson":{"concept":"กฎลูกโซ่ใช้กับฟังก์ชันประกอบ (function of a function) หัวใจคือ 'อนุพันธ์ข้างนอก คูณ อนุพันธ์ข้างใน' ถ้าซ้อนกันหลายชั้นก็คูณไล่ไปเรื่อย ๆ ทีละชั้น","formulas":["$\\dfrac{d}{dx}f(g(x))=f'(g(x))\\cdot g'(x)$"],"method":["มองให้ออกว่าอะไรคือฟังก์ชัน 'ข้างนอกสุด' และอะไรคือ 'ข้างในสุด'","หาอนุพันธ์ของข้างนอกโดยคงข้างในไว้เหมือนเดิม (ยังไม่แตะ)","คูณด้วยอนุพันธ์ของข้างใน","ถ้าข้างในยังซ้อนอีกชั้น ให้ทำ Chain Rule ต่อกับข้างในนั้นอีกที จนกว่าจะหมดชั้น"],"example":{"prompt":"จงหา $\\dfrac{d}{dx}\\sin^2(3x)$","solution":"มองเป็น $[\\sin(3x)]^2$: ชั้นนอกให้ $2u\\cdot u'$ โดย $u=\\sin(3x)$: $=2\\sin(3x)\\cdot\\cos(3x)\\cdot3=6\\sin(3x)\\cos(3x)$"},"pitfalls":["ลืมคูณอนุพันธ์ของข้างใน (ลืม $g'(x)$)","ทำ Chain Rule ไม่ครบทุกชั้นเมื่อฟังก์ชันซ้อนกันมากกว่า 2 ชั้น"],"intuition":"เมื่อสมการไม่ได้แก้ y ออกมาเป็น $y=f(x)$ ให้ถือว่า y เป็นฟังก์ชันของ x แล้วดิฟทั้งสมการ.","recognize":"มี x และ y ปนกันในสมการเดียว หรือถาม slope ที่จุด → implicit differentiation. ถ้าถาม tangent/normal ให้ใช้ slope หลังแทนจุด.","theory":"$d(y^n)/dx=ny^{n-1}y'$. สำหรับ $e^{x-y}$ ต้อง Chain: $e^{x-y}(1-y')$. สำหรับ $xy$ ต้อง Product: $y+xy'$. จากนั้นรวบพจน์ที่มี $y'$ แล้วแก้.","workflow":["ดิฟทุกพจน์เทียบ x","เติม $y'$ ทุกครั้งที่ดิฟ y","ใช้ Product Rule กับ xy","รวบพจน์ $y'$","แก้ $y'$","แทนจุด","tangent: $y-y_1=m(x-x_1)$; normal: slope $=-1/m$ ถ้า $m\\ne0$"],"deepExamples":[{"title":"ตรงกับ Assignment 5.2","prompt":"$x^4+e^{x-y}=xy+1$ ที่ $(1,1)$","solution":"ดิฟ: $4x^3+e^{x-y}(1-y')=y+xy'$. ที่ (1,1): $4+1-y'=1+y'$ → $4=2y'$ → $y'=2$.","answer":"slope $=2$"},{"title":"เส้นสัมผัส/เส้นปกติจากข้อเดียวกัน","prompt":"ที่ $(1,1)$ และ $m=2$","solution":"Tangent: $y-1=2(x-1)$. Normal slope $=-1/2$: $y-1=-\\frac12(x-1)$.","answer":"เส้นสัมผัส $y-1=2(x-1)$; เส้นปกติ $y-1=-\\frac12(x-1)$"},{"title":"Implicit พื้นฐาน","prompt":"$x^2+y^2=25$ ที่ $(3,4)$","solution":"$2x+2yy'=0$ → $y'=-x/y=-3/4$.","answer":"$-3/4$"}],"exam":"ลืม $y'$ ใน $d(y)/dx$ และลืม Product Rule ของ xy. อีกจุดคือ normal slope เป็น negative reciprocal ไม่ใช่ $-m$.","memory":"เห็น y → มี y'; เห็น xy → Product; รวบ y' → แทนจุด → tangent/normal.","pattern":"Assignment 1 ข้อ 5.2 ให้เส้นโค้ง $x^4+e^{x-y}=xy+1$, หา $dy/dx$ ที่ $(1,1)$ และต่อด้วยสมการเส้นสัมผัส/เส้นปกติ.","writeup":"ต้องแสดง implicit equation หลังดิฟก่อนแทนจุด เพื่อให้เห็นที่มาของ slope.","source":"เนื้อหาส่วนนี้ยึดรูปแบบโจทย์จาก Assignment 1 ภาคเรียนที่ 1/2569 เป็นหลัก ตามข้อมูลที่ผู้ใช้ระบุว่าข้อสอบยึด Assignment และเปลี่ยนตัวเลขหรือรายละเอียดเล็กน้อย","examStatus":"ตรงจาก Assignment 1 ข้อ 5.2"},"mcq":[{"q":"$\\dfrac{d}{dx}\\sin(3x^2)$ เท่ากับข้อใด","c":["$6x\\cos(3x^2)$","$\\cos(3x^2)$","$3\\cos(3x^2)$","$6x\\sin(3x^2)$","$-6x\\cos(3x^2)$"],"a":0,"ex":"Chain Rule: $\\cos(3x^2)\\cdot6x$"},{"q":"$\\dfrac{d}{dx}(2x+1)^5$ เท่ากับข้อใด","c":["$10(2x+1)^4$","$5(2x+1)^4$","$10(2x+1)^5$","$5(2x+1)^5$","$(2x+1)^4$"],"a":0,"ex":"$5(2x+1)^4\\cdot2=10(2x+1)^4$"},{"q":"$\\dfrac{d}{dx}e^{\\sin x}$ เท่ากับข้อใด","c":["$\\cos x\\cdot e^{\\sin x}$","$e^{\\sin x}$","$e^{\\cos x}$","$-\\sin x\\cdot e^{\\sin x}$","$\\sin x\\cdot e^{\\sin x}$"],"a":0,"ex":"อนุพันธ์เลขชี้กำลังคูณอนุพันธ์ของเลขชี้กำลัง: $e^{\\sin x}\\cdot\\cos x$"},{"q":"$\\dfrac{d}{dx}\\ln(x^2+1)$ เท่ากับข้อใด","c":["$\\frac{2x}{x^2+1}$","$\\frac{1}{x^2+1}$","$2x$","$\\frac{x}{x^2+1}$","$\\frac{2}{x^2+1}$"],"a":0,"ex":"$\\frac{1}{x^2+1}\\cdot2x$"},{"q":"$\\dfrac{d}{dx}\\sqrt{4-x^2}$ เท่ากับข้อใด","c":["$\\frac{-x}{\\sqrt{4-x^2}}$","$\\frac{1}{2\\sqrt{4-x^2}}$","$\\frac{x}{\\sqrt{4-x^2}}$","$\\frac{-2x}{\\sqrt{4-x^2}}$","$\\sqrt{4-x^2}$"],"a":0,"ex":"$\\frac{1}{2\\sqrt{4-x^2}}\\cdot(-2x)=\\frac{-x}{\\sqrt{4-x^2}}$"}],"essay":[{"title":"Chain Rule กับพหุนามยกกำลัง","points":5,"prompt":"จงหาอนุพันธ์ของ $f(x)=(3x^2-2x+1)^4$","model":"$$f'(x)=4(3x^2-2x+1)^3\\cdot(6x-2)$$"},{"title":"Chain Rule ซ้อนสองชั้น","points":5,"prompt":"จงหาอนุพันธ์ของ $f(x)=\\cos^3(2x)$","model":"มองเป็น $[\\cos(2x)]^3$: ใช้ Chain Rule สองชั้น\n$$f'(x)=3\\cos^2(2x)\\cdot(-\\sin2x)\\cdot2=-6\\sin(2x)\\cos^2(2x)$$"}],"examStatus":"ตรงจาก Assignment 1 ข้อ 5.2","examKind":"direct","assignmentItems":[["3.3","จาก Assignment 3.3: $\frac{d}{dx}(\\sqrt{x}\\cos(2x))$","Product Rule + Chain Rule","ต้องดิฟทั้งสอง factor"],["5.2","Assignment 5.2: $x^4+e^{x-y}=xy+1$ ที่ $(1,1)$","Implicit Differentiation + tangent/normal","ทุก $y$ เป็น function ของ $x$"]],"whatChanges":"coefficients และช่วงที่กำหนดอาจเปลี่ยน แต่ workflow วิเคราะห์กราฟต้องครบ critical → extrema → inflection → sketch → absolute extrema","cram":{"mustKnow":"เห็น y → มี y'; เห็น xy → Product; รวบ y' → แทนจุด → tangent/normal.","recognize":"มี x และ y ปนกันในสมการเดียว หรือถาม slope ที่จุด → implicit differentiation. ถ้าถาม tangent/normal ให้ใช้ slope หลังแทนจุด.","steps":["ดิฟทุกพจน์เทียบ x","เติม $y'$ ทุกครั้งที่ดิฟ y","ใช้ Product Rule กับ xy","รวบพจน์ $y'$","แก้ $y'$","แทนจุด"],"avoid":["ลืมคูณอนุพันธ์ของข้างใน (ลืม $g'(x)$)","ทำ Chain Rule ไม่ครบทุกชั้นเมื่อฟังก์ชันซ้อนกันมากกว่า 2 ชั้น"],"writeup":"ต้องแสดง implicit equation หลังดิฟก่อนแทนจุด เพื่อให้เห็นที่มาของ slope.","assignment":"ตรงจาก Assignment 1 ข้อ 5.2"}},{"name":"สมการอิงตัวแปรเสริม — $dy/dx$ และ $d^2y/dx^2$","icon":"🔄","lesson":{"concept":"เมื่อ $x$ และ $y$ ต่างถูกเขียนในรูปตัวแปรเสริม $t$ (parametric) ให้หา $dy/dx$ โดยหาร $dy/dt$ ด้วย $dx/dt$ — ห้ามหาร $y$ ด้วย $x$ ตรง ๆ","formulas":["$\\dfrac{dy}{dx}=\\dfrac{dy/dt}{dx/dt}$","$\\dfrac{d^2y}{dx^2}=\\dfrac{\\frac{d}{dt}\\left(\\frac{dy}{dx}\\right)}{dx/dt}$"],"method":["หา $dx/dt$ และ $dy/dt$ แยกกันก่อน","หาร $dy/dt$ ด้วย $dx/dt$ ได้ $dy/dx$ ในรูป $t$","ถ้าต้องการอันดับสอง ห้ามหาอนุพันธ์ $dy/dx$ เทียบ $x$ ตรง ๆ ต้องหาอนุพันธ์เทียบ $t$ ก่อนแล้วหารด้วย $dx/dt$ อีกครั้ง"],"example":{"prompt":"กำหนด $x=t^3,\\ y=t^2$ จงหา $dy/dx$ ที่ $t=2$","solution":"$dy/dt=2t,\\ dx/dt=3t^2\\Rightarrow dy/dx=\\dfrac{2t}{3t^2}=\\dfrac{2}{3t}$; ที่ $t=2$: $\\dfrac{2}{6}=\\dfrac13$"},"pitfalls":["หา $d^2y/dx^2$ โดยหาร $d^2y/dt^2$ ด้วย $d^2x/dt^2$ ตรง ๆ — ผิดหลักการ ต้องทำตามสูตรสองชั้น","ลืมแทนค่า $t$ ตามที่โจทย์ถามในขั้นตอนสุดท้าย"],"intuition":"t ไม่ใช่ x. คุณกำลังวัดการเปลี่ยนของ y ต่อ x ผ่านอัตราการเปลี่ยนของทั้งสองตัวเทียบกับ t.","recognize":"เห็น x(t), y(t) หรือคำว่า 'สมการอิงตัวแปรเสริม' → ห้ามหา y/x.","theory":"$dy/dx=(dy/dt)/(dx/dt)$. สำหรับ second derivative ให้ $d/dx=(1/(dx/dt))d/dt$. ดังนั้น $y''=[d(dy/dx)/dt]/(dx/dt)$.","workflow":["หา $x_t$","หา $y_t$","หารเพื่อได้ $y_x$","แทน t เมื่อถามจุด","ถ้าต้องการ $y_{xx}$: ดิฟ $y_x$ เทียบ t แล้วหารด้วย $x_t$"],"deepExamples":[{"title":"ตรงกับ Assignment 4.2","prompt":"$x=3t+1,\\ y=1-5t^3$ ที่ $t=1$","solution":"$x_t=3$, $y_t=-15t^2$. จึง $y_x=-5t^2$. ต่อไป $(d/dt)(-5t^2)=-10t$, หาร 3 ได้ $y_{xx}=-10t/3$.","answer":"$y_x=-5,\\ y_{xx}=-10/3$"},{"title":"วงกลมแบบ parametric","prompt":"$x=5\\cos t,y=5\\sin t$","solution":"$dy/dx=(-5\\cos t)/( -5\\sin t)=\\cot t$ (เมื่อ $\\sin t\\ne0$).","answer":"$\\cot t$"},{"title":"ตรวจจุดที่สูตรใช้ไม่ได้","prompt":"ถ้า $dx/dt=0$","solution":"สูตร $dy/dx=(dy/dt)/(dx/dt)$ ใช้ตรง ๆ ไม่ได้ ต้องวิเคราะห์ tangent จากพารามิเตอร์แทน.","answer":"ต้องตรวจกรณีพิเศษ"}],"exam":"อย่าลืม denominator $dx/dt$ ในทั้ง first และ second derivative. และอย่าแทน t เร็วเกินไปจนมองไม่เห็น derivative structure.","memory":"$y_x=y_t/x_t$; $y_{xx}=(y_x)_t/x_t$.","pattern":"Assignment 1 ข้อ 4.2 ให้ $x=3t+1$, $y=1-5t^3$ แล้วถามทั้ง $dy/dx$ และ $d^2y/dx^2$ ที่ $t=1$.","writeup":"แยกบรรทัด $x_t$, $y_t$, $y_x$, $(y_x)_t$, $y_{xx}$.","source":"เนื้อหาส่วนนี้ยึดรูปแบบโจทย์จาก Assignment 1 ภาคเรียนที่ 1/2569 เป็นหลัก ตามข้อมูลที่ผู้ใช้ระบุว่าข้อสอบยึด Assignment และเปลี่ยนตัวเลขหรือรายละเอียดเล็กน้อย","examStatus":"ตรงจาก Assignment 1 ข้อ 4.2 — เนื้อหาทับซ้อนกับบท 5"},"mcq":[{"q":"$x=t^2,\\ y=t^3$ หา $dy/dx$","c":["$3t/2$","$3t^2/2t$ ยังไม่ลดรูป","$2t/3$","$t^2$","$3t$"],"a":0,"ex":"$dy/dx=\\frac{dy/dt}{dx/dt}=\\frac{3t^2}{2t}=\\frac{3t}{2}$"},{"q":"$x=\\cos t,\\ y=\\sin t$ หา $dy/dx$","c":["$-\\cot t$","$\\cot t$","$-\\tan t$","$\\tan t$","$-1$"],"a":0,"ex":"$dy/dx=\\frac{\\cos t}{-\\sin t}=-\\cot t$"},{"q":"Cycloid: $x=t-\\sin t,\\ y=1-\\cos t$ หา $dy/dx$","c":["$\\frac{\\sin t}{1-\\cos t}$","$\\frac{1-\\cos t}{\\sin t}$","$\\cot(t/2)$ เท่านั้น","$\\tan t$","$-\\sin t$"],"a":0,"ex":"$dy/dx=\\frac{dy/dt}{dx/dt}=\\frac{\\sin t}{1-\\cos t}$"},{"q":"สูตรอนุพันธ์อันดับสองของสมการพาราเมตริกคือข้อใด","c":["$\\dfrac{d}{dt}\\left(\\dfrac{dy}{dx}\\right)\\div\\dfrac{dx}{dt}$","$\\dfrac{d^2y/dt^2}{d^2x/dt^2}$","$\\dfrac{dy}{dt}\\div\\dfrac{dy}{dt}$","อนุพันธ์อันดับสองปกติของ $y$ เทียบ $x$ โดยตรง","ไม่มีสูตรตายตัว"],"a":0,"ex":"$\\frac{d^2y}{dx^2}=\\dfrac{\\frac{d}{dt}\\left(\\frac{dy}{dx}\\right)}{dx/dt}$ (ห้ามหารสองอนุพันธ์อันดับสองตรงๆ)"},{"q":"$x=e^t,\\ y=e^{-t}$ หา $dy/dx$","c":["$-e^{-2t}$","$e^{-2t}$","$-e^{2t}$","$-1$","$e^t$"],"a":0,"ex":"$dy/dx=\\frac{-e^{-t}}{e^t}=-e^{-2t}$"}],"essay":[{"title":"อนุพันธ์พาราเมตริกและค่าที่ t กำหนด","points":5,"prompt":"กำหนด $x=t^2+1,\\ y=t^3-3t$ จงหา $dy/dx$ ในรูป $t$ แล้วประเมินค่าที่ $t=2$","model":"$dy/dt=3t^2-3,\\quad dx/dt=2t$\n$$\\frac{dy}{dx}=\\frac{3t^2-3}{2t}$$\nที่ $t=2$: $\\dfrac{3(4)-3}{4}=\\dfrac{9}{4}$"},{"title":"อนุพันธ์อันดับสองแบบพาราเมตริก","points":5,"prompt":"กำหนด $x=2\\cos\\theta,\\ y=3\\sin\\theta$ จงหา $dy/dx$ และ $d^2y/dx^2$ ในรูป $\\theta$","model":"$dy/d\\theta=3\\cos\\theta,\\quad dx/d\\theta=-2\\sin\\theta$\n$$\\frac{dy}{dx}=\\frac{3\\cos\\theta}{-2\\sin\\theta}=-\\frac32\\cot\\theta$$\nหาอนุพันธ์อีกชั้น: $\\dfrac{d}{d\\theta}\\left(-\\frac32\\cot\\theta\\right)=\\frac32\\csc^2\\theta$ แล้วหารด้วย $dx/d\\theta$:\n$$\\frac{d^2y}{dx^2}=\\frac{\\frac32\\csc^2\\theta}{-2\\sin\\theta}=\\frac{-3}{4\\sin^3\\theta}$$"}],"examStatus":"ตรงจาก Assignment 1 ข้อ 4.2 — เนื้อหาทับซ้อนกับบท 5","examKind":"direct-overlap","assignmentItems":[["4.2","กำหนด $x=3t+1$, $y=1-5t^3$ จงหา $dy/dx$ และ $d^2y/dx^2$ ที่ $t=1$","parametric first and second derivative","ใช้ $dy/dx=(dy/dt)/(dx/dt)$ และหารด้วย $dx/dt$ อีกครั้งสำหรับอันดับสอง"]],"whatChanges":"ตัวเลขและฟังก์ชันเปลี่ยนได้ แต่ optimization ต้องแยก objective/constraint และ L'Hôpital ต้องตรวจ indeterminate form ก่อน","cram":{"mustKnow":"$y_x=y_t/x_t$; $y_{xx}=(y_x)_t/x_t$.","recognize":"เห็น x(t), y(t) หรือคำว่า 'สมการอิงตัวแปรเสริม' → ห้ามหา y/x.","steps":["หา $x_t$","หา $y_t$","หารเพื่อได้ $y_x$","แทน t เมื่อถามจุด","ถ้าต้องการ $y_{xx}$: ดิฟ $y_x$ เทียบ t แล้วหารด้วย $x_t$"],"avoid":["หา $d^2y/dx^2$ โดยหาร $d^2y/dt^2$ ด้วย $d^2x/dt^2$ ตรง ๆ — ผิดหลักการ ต้องทำตามสูตรสองชั้น","ลืมแทนค่า $t$ ตามที่โจทย์ถามในขั้นตอนสุดท้าย"],"writeup":"แยกบรรทัด $x_t$, $y_t$, $y_x$, $(y_x)_t$, $y_{xx}$.","assignment":"ตรงจาก Assignment 1 ข้อ 4.2 — เนื้อหาทับซ้อนกับบท 5"}},{"name":"Related Rates — อัตราการเปลี่ยนแปลง","icon":"⚡","lesson":{"concept":"Related Rates คือโจทย์บรรยายสถานการณ์จริงที่ตัวแปรหลายตัวเปลี่ยนตามเวลา เชื่อมกันด้วยสมการทางเรขาคณิตหรือฟิสิกส์ แล้วหาอนุพันธ์เทียบเวลา $t$ ทั้งสมการ (คือ Implicit Differentiation เทียบ $t$)","formulas":["ตั้งสมการเชื่อมตัวแปร (เช่น Pythagorean, ปริมาตรทรงกลม $V=\\tfrac43\\pi r^3$) แล้วหา $\\dfrac{d}{dt}$ ทั้งสองข้าง"],"method":["วาดรูป/ระบุตัวแปรที่เปลี่ยนตามเวลาให้ชัดเจน","เขียนสมการที่เชื่อมตัวแปรเหล่านั้นในรูปทั่วไป (ยังไม่แทนค่าตัวเลข)","หาอนุพันธ์ทั้งสมการเทียบ $t$ (ทุกตัวแปรคูณ $d(\\cdot)/dt$)","แทนค่าตัวเลข ณ ช่วงเวลาที่โจทย์ถามเป็นขั้นตอนสุดท้ายเท่านั้น — ห้ามแทนค่าตัวเลขก่อนหาอนุพันธ์"],"example":{"prompt":"สี่เหลี่ยมจัตุรัสด้านยาว $x$ ขยายตัวด้วยอัตรา $dx/dt=3$ ซม./วิ พื้นที่เปลี่ยนแปลงเร็วเท่าใดเมื่อ $x=5$","solution":"$A=x^2\\Rightarrow dA/dt=2x(dx/dt)=2(5)(3)=30$ ตร.ซม./วิ"},"pitfalls":["แทนค่าตัวเลขก่อนหาอนุพันธ์ ทำให้พจน์ตัวแปรหายไปก่อนเวลาอันควร","ตั้งสมการเชื่อมตัวแปรผิด (ผูกเรขาคณิตของสถานการณ์ไม่ถูกต้อง)"],"intuition":"โจทย์ไม่ได้ถามค่าของตัวแปร แต่ถาม 'มันกำลังเปลี่ยนเร็วแค่ไหน'. ทุกตัวแปรจึงเป็นฟังก์ชันของเวลา.","recognize":"คำว่า 'อัตราการเปลี่ยนแปลง', 'ต่อวินาที', 'กำลังเพิ่ม/ลด' → Related Rates. ห้ามแทนค่าคงที่ก่อนดิฟ.","theory":"เขียนความสัมพันธ์ระหว่างตัวแปรก่อน แล้วดิฟทั้งสมการเทียบ t. สำหรับ resistor: $-R^{-2}R_t=-R_1^{-2}R_{1t}-R_2^{-2}R_{2t}$. จากนั้นแทนค่าที่โจทย์กำหนด.","workflow":["กำหนดทุกตัวแปรเป็นฟังก์ชันของ t","เขียนสมการ constraint","ดิฟทั้งสมการเทียบ t","แทนค่าปัจจุบันและ rates ที่โจทย์ให้","แก้ rate ที่ถาม","ใส่หน่วยและเครื่องหมาย"],"deepExamples":[{"title":"ตรงกับ Assignment 6.3","prompt":"$\\frac1R=\\frac1{R_1}+\\frac1{R_2}$, $R_1=2,R_2=3$, $R_{1t}=1,R_{2t}=1.5$","solution":"ดิฟ: $-R_t/R^2=-R_{1t}/R_1^2-R_{2t}/R_2^2$. ที่ 2,3: $1/R=5/6$ จึง $R=6/5$. ได้ $R_t=R^2(1/4+1.5/9)=36/25\\cdot11/24=33/50$.","answer":"$0.66\\ \\Omega/s$"},{"title":"พื้นที่วงกลม","prompt":"$A=\\pi r^2$, $dr/dt=2$, ที่ r=5","solution":"$A_t=2\\pi r r_t=20\\pi$.","answer":"$20\\pi$"},{"title":"บันได","prompt":"$x^2+y^2=100$, $x=6$, $x_t=2$","solution":"หา y=8 ก่อน แล้ว $2xx_t+2yy_t=0$ → $y_t=-3/2$.","answer":"$-1.5$"}],"exam":"กับดักคือแทน $R_1=2,R_2=3$ ก่อนดิฟ, ลืมเครื่องหมายลบจากอนุพันธ์ $1/R$, และตอบโดยไม่ใส่หน่วย.","memory":"รูปจริง → สมการ → ดิฟตาม t → แทนค่าท้ายสุด → solve rate → หน่วย.","pattern":"Assignment 1 ข้อ 6.3 เป็น related rates แบบวิศวกรรม: ตัวต้านทานขนาน $1/R=1/R_1+1/R_2$ และให้ $dR_1/dt$, $dR_2/dt$ แล้วถาม $dR/dt$.","writeup":"เขียนสมการความสัมพันธ์ก่อนทุกครั้ง. อย่าเริ่มจากตัวเลข.","source":"เนื้อหาส่วนนี้ยึดรูปแบบโจทย์จาก Assignment 1 ภาคเรียนที่ 1/2569 เป็นหลัก ตามข้อมูลที่ผู้ใช้ระบุว่าข้อสอบยึด Assignment และเปลี่ยนตัวเลขหรือรายละเอียดเล็กน้อย","examStatus":"ตรงจาก Assignment 1 ข้อ 6.3"},"mcq":[{"q":"วัตถุมีตำแหน่ง $s(t)=-5t^2+20t$ หาความเร็วที่ $t=1$","c":["10","20","-10","5","15"],"a":0,"ex":"$v(t)=s'(t)=-10t+20$, ที่ $t=1$: $v=10$"},{"q":"จากข้อข้างต้น เวลาที่วัตถุขึ้นสูงสุด (ความเร็ว=0) คือเมื่อใด","c":["t=2","t=1","t=0","t=4","t=0.5"],"a":0,"ex":"$-10t+20=0\\Rightarrow t=2$"},{"q":"ลูกโป่งทรงกลมพองตัว รัศมี $r$ เพิ่มขึ้น อัตราการเปลี่ยนแปลงปริมาตรคือข้อใด","c":["$dV/dt=4\\pi r^2\\,dr/dt$","$dV/dt=\\frac43\\pi r^3$","$dV/dt=2\\pi r\\,dr/dt$","$dV/dt=4\\pi r\\,dr/dt$","$dV/dt=\\pi r^2\\,dr/dt$"],"a":0,"ex":"จาก $V=\\frac43\\pi r^3$, $dV/dt=4\\pi r^2\\,dr/dt$"},{"q":"บันไดพิง กำแพงสูง $y$ ฐานห่างกำแพง $x$ ยาวคงที่ $L$ ความสัมพันธ์อัตราการเปลี่ยนแปลงคือข้อใด","c":["$x\\frac{dx}{dt}+y\\frac{dy}{dt}=0$","$\\frac{dx}{dt}=\\frac{dy}{dt}$","$x+y=L$ อนุพันธ์โดยตรง","$2x+2y=0$","$x\\frac{dy}{dt}=y\\frac{dx}{dt}$"],"a":0,"ex":"จาก $x^2+y^2=L^2$ อนุพันธ์เทียบเวลา: $2x\\,dx/dt+2y\\,dy/dt=0$"},{"q":"ความเร่งคืออนุพันธ์อันดับใดของตำแหน่ง (position)","c":["อันดับสอง (อนุพันธ์ของความเร็ว)","อันดับหนึ่ง","อันดับสาม","ไม่ใช่อนุพันธ์","อันดับศูนย์"],"a":0,"ex":"$a(t)=v'(t)=s''(t)$ เป็นอนุพันธ์อันดับสองของตำแหน่ง"}],"essay":[{"title":"บันไดพิงกำแพง (Related Rates)","points":5,"prompt":"บันไดยาว 10 เมตรพิงกำแพง ฐานเลื่อนออกจากกำแพงด้วยอัตรา 2 m/s เมื่อฐานห่างกำแพง 6 เมตร จงหาอัตราที่ปลายบนเลื่อนลง","model":"$x^2+y^2=100$, ที่ $x=6\\Rightarrow y=8$\nอนุพันธ์เทียบเวลา: $2x\\dfrac{dx}{dt}+2y\\dfrac{dy}{dt}=0\\Rightarrow\\dfrac{dy}{dt}=-\\dfrac{x}{y}\\dfrac{dx}{dt}$\n$$\\frac{dy}{dt}=-\\frac68(2)=-1.5\\text{ m/s}$$\nปลายบนเลื่อนลงด้วยอัตรา 1.5 เมตร/วินาที"},{"title":"ลูกโป่งพองตัว (Related Rates)","points":5,"prompt":"ลูกโป่งทรงกลมพองตัวด้วยอัตราปริมาตร 100 ลบ.ซม./วินาที จงหาอัตราการเพิ่มของรัศมีเมื่อ $r=5$ ซม.","model":"$V=\\dfrac43\\pi r^3\\Rightarrow\\dfrac{dV}{dt}=4\\pi r^2\\dfrac{dr}{dt}$\n$$100=4\\pi(25)\\frac{dr}{dt}=100\\pi\\frac{dr}{dt}\\Rightarrow\\frac{dr}{dt}=\\frac{1}{\\pi}\\text{ cm/s}$$"}],"examStatus":"ตรงจาก Assignment 1 ข้อ 6.3","examKind":"direct","assignmentItems":[["3.6","จาก Assignment 3.6: $\frac{d}{dx}\\ln(x^8+2x)$","Log + Chain Rule","ต้องดิฟ argument"]],"whatChanges":"ค่าของ rates และตัวแปร ณ ขณะนั้นเปลี่ยนได้ แต่ต้องเขียน relation แล้วดิฟเทียบเวลา ก่อนแทนค่า","cram":{"mustKnow":"รูปจริง → สมการ → ดิฟตาม t → แทนค่าท้ายสุด → solve rate → หน่วย.","recognize":"คำว่า 'อัตราการเปลี่ยนแปลง', 'ต่อวินาที', 'กำลังเพิ่ม/ลด' → Related Rates. ห้ามแทนค่าคงที่ก่อนดิฟ.","steps":["กำหนดทุกตัวแปรเป็นฟังก์ชันของ t","เขียนสมการ constraint","ดิฟทั้งสมการเทียบ t","แทนค่าปัจจุบันและ rates ที่โจทย์ให้","แก้ rate ที่ถาม","ใส่หน่วยและเครื่องหมาย"],"avoid":["แทนค่าตัวเลขก่อนหาอนุพันธ์ ทำให้พจน์ตัวแปรหายไปก่อนเวลาอันควร","ตั้งสมการเชื่อมตัวแปรผิด (ผูกเรขาคณิตของสถานการณ์ไม่ถูกต้อง)"],"writeup":"เขียนสมการความสัมพันธ์ก่อนทุกครั้ง. อย่าเริ่มจากตัวเลข.","assignment":"ตรงจาก Assignment 1 ข้อ 6.3"}},{"name":"Linear Approximation + Error","icon":"🎯","lesson":{"concept":"ใช้ดิฟเฟอเรนเชียล $dy=f'(x)\\,dx$ ประมาณค่าฟังก์ชันใกล้จุดที่คำนวณง่าย (เช่นใช้ $\\sqrt4$ แทน $\\sqrt{4.1}$) และประเมินความผิดพลาดที่เกิดจากการวัด","formulas":["$dy=f'(x)\\,dx$","$\\Delta y\\approx dy$ เมื่อ $dx$ มีค่าน้อย","% ความผิดพลาด $=\\left(\\dfrac{dy}{y}\\right)\\times100\\%$"],"method":["เลือกจุด $x$ ที่คำนวณง่ายและใกล้กับค่าที่โจทย์ถามที่สุด","หา $dx$ = ผลต่างระหว่างค่าที่โจทย์ถามกับจุด $x$ ที่เลือก","หา $f'(x)$ ที่จุดนั้น แล้วคูณด้วย $dx$ ได้ $dy$","ค่าที่ประมาณได้ $=f(x)+dy$"],"example":{"prompt":"จงประมาณค่า $(2.03)^4$ โดยใช้ดิฟเฟอเรนเชียล","solution":"$f(x)=x^4,\\ x=2,\\ dx=0.03;\\ f'(x)=4x^3=32\\Rightarrow dy=32(0.03)=0.96$; ประมาณ $=f(2)+dy=16+0.96=16.96$"},"pitfalls":["เลือกจุดอ้างอิง $x$ ที่คำนวณยาก ทำให้เสียเวลาโดยไม่จำเป็น (ควรเลือกจุดที่ $f$ และ $f'$ คำนวณง่าย)","สับสนระหว่างความผิดพลาดสัมบูรณ์ ($dy$) กับความผิดพลาดสัมพัทธ์ ($dy/y$)"],"intuition":"ใกล้จุดที่คำนวณง่าย กราฟแทบเหมือนเส้นสัมผัส จึงใช้เส้นสัมผัสประมาณค่าและใช้ differential ประมาณความคลาดเคลื่อน.","recognize":"คำว่า 'ประมาณค่าเชิงเส้น', 'linear approximation', 'ค่าผิดพลาดโดยประมาณ', measurement error → ใช้ differential.","theory":"$L(x)=f(a)+f'(a)(x-a)$ และ $dy\\approx f'(a)dx$. เลือก a ให้ใกล้ x และคำนวณง่าย. ใน error propagation ใช้ $|dS|\\approx|S'(r)dr|$.","workflow":["เลือก base point ที่ง่ายและใกล้ที่สุด","หา $f(a)$ และ $f'(a)$","คำนวณ $dx=x-a$","ใช้ $L(x)$","ถ้าเป็น error ให้ใช้ absolute value เมื่อถามขนาดความผิดพลาด","ใส่หน่วย"],"deepExamples":[{"title":"ตรงกับ Assignment 6.1","prompt":"ประมาณ $\\ln(2.02)$","solution":"เลือก $a=2$: $f(2)=\\ln2$, $f'(x)=1/x$, ดังนั้น $L(2.02)=\\ln2+(1/2)(0.02)=\\ln2+0.01$.","answer":"ประมาณ $0.703147$"},{"title":"ตรงกับ Assignment 6.2","prompt":"$S=4\\pi r^2$, r=2, $|dr|=0.01$","solution":"$dS=8\\pi r\\,dr=16\\pi(\\pm0.01)=\\pm0.16\\pi$. ขนาด error ประมาณ $0.16\\pi\\approx0.503$.","answer":"ประมาณ $0.16\\pi\\ \\text{cm}^2$"},{"title":"เปรียบเทียบกับ differential","prompt":"ถ้า $y=\\sqrt{x}$ และ x เปลี่ยนจาก 4 เป็น 4.04","solution":"$dy\\approx f'(4)(0.04)=\\frac14(0.04)=0.01$.","answer":"$\\sqrt{4.04}\\approx2.01$"}],"exam":"เลือก a ผิดทำให้ประมาณไม่ดี; สับสน $dx$ กับ x; ถาม error ให้ดูว่าโจทย์ต้องการ signed error หรือ magnitude.","memory":"เลือกจุดง่าย → $dx$ → $f'(a)$ → $dy$ → บวกกับ $f(a)$. Error ≈ $|f'(a)dx|$.","pattern":"Assignment 1 ข้อ 6.1 ใช้ linear approximation หา $\\ln(2.02)$ และข้อ 6.2 ใช้ differential เพื่อประมาณ error ของพื้นที่ผิวทรงกลม $S=4\\pi r^2$.","writeup":"แสดงว่าทำไมเลือก a. สำหรับ error ให้เขียน differential equation และแทน measurement uncertainty ก่อนสรุป.","source":"เนื้อหาส่วนนี้ยึดรูปแบบโจทย์จาก Assignment 1 ภาคเรียนที่ 1/2569 เป็นหลัก ตามข้อมูลที่ผู้ใช้ระบุว่าข้อสอบยึด Assignment และเปลี่ยนตัวเลขหรือรายละเอียดเล็กน้อย","examStatus":"ตรงจาก Assignment 1 ข้อ 6.1–6.2"},"mcq":[{"q":"ใช้ดิฟเฟอเรนเชียลประมาณ $\\sqrt{4.1}$","c":["2.025","2.05","2.1","2.5","2.0"],"a":0,"ex":"$f(x)=\\sqrt x,x=4,dx=0.1$: $f'(4)=\\frac1{2\\sqrt4}=0.25$; ประมาณ $=2+0.25(0.1)=2.025$"},{"q":"สูตรดิฟเฟอเรนเชียล $dy$ คือข้อใด","c":["$dy=f'(x)\\,dx$","$dy=f(x)\\,dx$","$dy=f'(x)/dx$","$dy=\\Delta y$ เสมอ","$dy=f''(x)\\,dx$"],"a":0,"ex":"นิยาม: $dy=f'(x)\\,dx$"},{"q":"ค่าความผิดพลาดสัมพัทธ์ (relative error) ประมาณได้จากข้อใด","c":["$dy/y$","$dy$","$y/dy$","$dx/x$ เสมอ","$\\Delta y$"],"a":0,"ex":"ค่าความผิดพลาดสัมพัทธ์ $\\approx dy/y$"},{"q":"เปอร์เซ็นต์ความผิดพลาดคำนวณจากข้อใด","c":["$(dy/y)\\times100\\%$","$dy\\times100$","$(dx/x)\\times100$ เสมอ","$dy/100$","$y/dy\\times100\\%$"],"a":0,"ex":"เปอร์เซ็นต์ผิดพลาด $=(dy/y)\\times100\\%$"},{"q":"ถ้าวัดรัศมีทรงกลมผิดพลาด 2% ปริมาตร ($V\\propto r^3$) จะผิดพลาดประมาณเท่าใด","c":["6%","2%","3%","9%","8%"],"a":0,"ex":"เนื่องจาก $V\\propto r^3$ % ผิดพลาดของ $V\\approx3\\times$(% ผิดพลาดของ $r$)$=3\\times2\\%=6\\%$"}],"essay":[{"title":"ค่าความผิดพลาดของปริมาตรลูกบาศก์","points":5,"prompt":"วัดด้านลูกบาศก์ได้ 10 ซม. โดยมีความผิดพลาดได้ถึง 0.1 ซม. จงประมาณค่าความผิดพลาดของปริมาตร และเปอร์เซ็นต์ความผิดพลาด","model":"$V=x^3\\Rightarrow dV=3x^2\\,dx=3(100)(0.1)=30$ ลบ.ซม.\n$$\\text{% ผิดพลาด}=\\frac{dV}{V}\\times100\\%=\\frac{30}{1000}\\times100\\%=3\\%$$"},{"title":"ประมาณค่ารากที่สาม","points":5,"prompt":"จงใช้ดิฟเฟอเรนเชียลประมาณค่า $\\sqrt[3]{8.06}$","model":"$f(x)=x^{1/3},x=8,dx=0.06$\n$f(8)=2$, $f'(x)=\\frac13x^{-2/3}$, $f'(8)=\\frac13\\cdot\\frac14=\\frac1{12}$\n$$\\sqrt[3]{8.06}\\approx2+\\frac1{12}(0.06)=2+0.005=2.005$$"}],"examStatus":"ตรงจาก Assignment 1 ข้อ 6.1–6.2","examKind":"direct","assignmentItems":[["3.3","จาก Assignment 3.3: $\frac{d}{dx}(\\sqrt{x}\\cos(2x))$","Product Rule + Chain Rule","ต้องดิฟทั้งสอง factor"],["3.5","จาก Assignment 3.5: $\frac{d}{dx}(3^{2x+1})$","Exponential + Chain Rule","ต้องคูณ inner derivative"]],"whatChanges":"ค่าที่ต้องประมาณและจุดฐานเปลี่ยนได้ แต่สูตร linearization/differential และแนวคิด error ยังเดิม","cram":{"mustKnow":"เลือกจุดง่าย → $dx$ → $f'(a)$ → $dy$ → บวกกับ $f(a)$. Error ≈ $|f'(a)dx|$.","recognize":"คำว่า 'ประมาณค่าเชิงเส้น', 'linear approximation', 'ค่าผิดพลาดโดยประมาณ', measurement error → ใช้ differential.","steps":["เลือก base point ที่ง่ายและใกล้ที่สุด","หา $f(a)$ และ $f'(a)$","คำนวณ $dx=x-a$","ใช้ $L(x)$","ถ้าเป็น error ให้ใช้ absolute value เมื่อถามขนาดความผิดพลาด","ใส่หน่วย"],"avoid":["เลือกจุดอ้างอิง $x$ ที่คำนวณยาก ทำให้เสียเวลาโดยไม่จำเป็น (ควรเลือกจุดที่ $f$ และ $f'$ คำนวณง่าย)","สับสนระหว่างความผิดพลาดสัมบูรณ์ ($dy$) กับความผิดพลาดสัมพัทธ์ ($dy/y$)"],"writeup":"แสดงว่าทำไมเลือก a. สำหรับ error ให้เขียน differential equation และแทน measurement uncertainty ก่อนสรุป.","assignment":"ตรงจาก Assignment 1 ข้อ 6.1–6.2"}},{"name":"Curve Analysis — critical points, extrema, inflection, graph","icon":"📊","lesson":{"concept":"จุดวิกฤต (critical point) คือจุดที่ $f'(x)=0$ หรือ $f'$ ไม่นิยาม ใช้ Second Derivative Test (หรือดูการเปลี่ยนเครื่องหมายของ $f'$) จำแนกว่าเป็นจุดสูงสุด/ต่ำสุดสัมพัทธ์ ส่วนจุดเปลี่ยนเว้าดูจาก $f''=0$ ที่มีการเปลี่ยนเครื่องหมายจริง","formulas":["$f'(x)=0$ → หาจุดวิกฤต","ที่จุดวิกฤต: $f''(x)>0\\Rightarrow$ local min, $f''(x)<0\\Rightarrow$ local max","$f''(x)=0$ และเปลี่ยนเครื่องหมายจริง → จุดเปลี่ยนเว้า (inflection)"],"method":["หา $f'(x)$ แล้วตั้งเป็น 0 หาจุดวิกฤตทั้งหมด","แทนแต่ละจุดวิกฤตใน $f''(x)$: บวก=ต่ำสุด, ลบ=สูงสุด, ศูนย์ให้ใช้ First Derivative Test แทน","หา $f''(x)=0$ แยกต่างหาก แล้วเช็คว่าเครื่องหมาย $f''$ เปลี่ยนจริงหรือไม่ก่อนสรุปว่าเป็นจุดเปลี่ยนเว้า","สรุปช่วงเพิ่ม/ลด (จากเครื่องหมาย $f'$) และช่วงเว้าขึ้น/เว้าลง (จากเครื่องหมาย $f''$)"],"example":{"prompt":"กำหนด $f(x)=x^4-2x^2$ จงหาจุดวิกฤตและจำแนกประเภท","solution":"$f'=4x^3-4x=4x(x-1)(x+1)=0\\Rightarrow x=0,\\pm1$; $f''=12x^2-4$; ที่ $x=0$: $f''=-4<0\\Rightarrow$ local max; ที่ $x=\\pm1$: $f''=8>0\\Rightarrow$ local min"},"pitfalls":["ลืมเช็คว่า $f''=0$ ต้อง 'เปลี่ยนเครื่องหมายจริง' ไม่ใช่ทุกจุดที่ $f''=0$ จะเป็นจุดเปลี่ยนเว้าเสมอไป","สรุป max/min ทั้งที่ $f''=0$ โดยไม่เปลี่ยนไปใช้ First Derivative Test แทน"],"intuition":"ข้อนี้ไม่ใช่แค่หา f'=0 แต่เป็นการเอา derivative มาเล่า 'พฤติกรรมทั้งกราฟ'.","recognize":"ถ้าข้อถามหลายข้อ 7.1–7.5 ให้ทำเป็น workflow เดียว ไม่ทำแยกแบบไร้ระบบ.","theory":"Critical number อยู่ที่ $f'=0$ หรือ f' ไม่กำหนดและ x อยู่ใน domain. ใช้ sign ของ f' แยก increasing/decreasing และ classify extrema. ใช้ f'' หา concavity; inflection ต้องมีการเปลี่ยน concavity ไม่ใช่แค่ f''=0. Absolute extrema บน closed interval ต้องตรวจทั้ง critical points และ endpoints.","workflow":["หา domain","หา $f'$ และ critical numbers","สร้าง sign chart ของ f'","หา relative max/min","หา $f''$","หา candidate inflection และตรวจ sign change","หาค่า f ที่ critical/endpoints","วาด graph จากข้อมูลทั้งหมด","บน closed interval ตรวจ endpoints เสมอ"],"deepExamples":[{"title":"ตรงกับ Assignment 7","prompt":"$f=x^4-6x^2+8x+8$","solution":"$f'=4x^3-12x+8=4(x-1)^2(x+2)$. Critical: $x=-2,1$. จาก sign f': ลดก่อน -2, เพิ่มหลัง -2; ที่ x=1 sign ไม่เปลี่ยน จึงไม่ใช่ relative extremum. $f''=12x^2-12=12(x-1)(x+1)$ → candidates ±1 และตรวจ concavity.","answer":"ต้องทำ sign analysis ต่อก่อนสรุป"},{"title":"Absolute extrema บน $[-1,1]$","prompt":"ใช้ critical point ที่อยู่ในช่วง + endpoints","solution":"ในช่วงมี x=1 เป็น critical แต่ไม่ใช่ max/min แบบ local จาก f'; ต้องเทียบ $f(-1),f(1)$ และจุด critical ทั้งหมดในช่วง.","answer":"ต้องเทียบค่าครบ"},{"title":"Inflection","prompt":"$f''=12(x^2-1)$","solution":"f'' เปลี่ยน sign ที่ -1 และ 1 จึงเป็น inflection candidates ที่ผ่านการตรวจ.","answer":"$x=\\pm1$"}],"exam":"กับดักใหญ่คือเรียกทุก $f'=0$ ว่า max/min และเรียกทุก $f''=0$ ว่า inflection. Absolute extrema ต้องเช็ก endpoints.","memory":"f' = เพิ่ม/ลด + local extrema. f'' = เว้า. Absolute on [a,b] = critical + endpoints.","pattern":"Assignment 1 ข้อ 7 ให้ $f(x)=x^4-6x^2+8x+8$ แล้วถามครบ: critical points, relative extrema, inflection points, graph และ absolute extrema บน $[-1,1]$.","writeup":"ทำตาราง sign ของ f' และ f'' จะได้คะแนนและช่วยวาดกราฟ. ตอนจบต้องรายงานเป็น 'จุด (x,y)' ไม่ใช่แค่ x ถ้าโจทย์ถามจุด.","source":"เนื้อหาส่วนนี้ยึดรูปแบบโจทย์จาก Assignment 1 ภาคเรียนที่ 1/2569 เป็นหลัก ตามข้อมูลที่ผู้ใช้ระบุว่าข้อสอบยึด Assignment และเปลี่ยนตัวเลขหรือรายละเอียดเล็กน้อย","examStatus":"ตรงจาก Assignment 1 ข้อ 7"},"mcq":[{"q":"$f(x)=x^3-3x$ จุดวิกฤต (critical points) คือข้อใด","c":["$x=\\pm1$","$x=0$","$x=\\pm3$","$x=1$ เท่านั้น","$x=0,\\pm1$"],"a":0,"ex":"$f'=3x^2-3=0\\Rightarrow x^2=1\\Rightarrow x=\\pm1$"},{"q":"จากข้อข้างต้น ใช้ Second Derivative Test ที่ $x=1$ ได้ผลอย่างไร","c":["จุดต่ำสุดสัมพัทธ์ (local min)","จุดสูงสุดสัมพัทธ์ (local max)","จุดเปลี่ยนเว้า (inflection)","ไม่ใช่จุดวิกฤต","บอกไม่ได้"],"a":0,"ex":"$f''=6x$, ที่ $x=1$: $f''=6>0\\Rightarrow$ local min"},{"q":"ที่ $x=-1$ ของฟังก์ชันเดียวกัน ได้ผลอย่างไร","c":["จุดสูงสุดสัมพัทธ์ (local max)","จุดต่ำสุดสัมพัทธ์ (local min)","จุดเปลี่ยนเว้า","ไม่ใช่จุดวิกฤต","บอกไม่ได้"],"a":0,"ex":"$f''(-1)=-6<0\\Rightarrow$ local max"},{"q":"จุดเปลี่ยนเว้า (inflection point) ของ $f(x)=x^3-3x$ อยู่ที่ใด","c":["$x=0$","$x=1$","$x=-1$","$x=\\pm1$","ไม่มี"],"a":0,"ex":"$f''=6x=0\\Rightarrow x=0$"},{"q":"กราฟเว้าขึ้น (concave up) เมื่อใด","c":["$f''(x)>0$","$f'(x)>0$","$f''(x)<0$","$f'(x)=0$","$f(x)>0$"],"a":0,"ex":"กราฟเว้าขึ้นเมื่อ $f''(x)>0$"}],"essay":[{"title":"วิเคราะห์ค่าสูงสุด-ต่ำสุดของฟังก์ชันกำลังสาม","points":5,"prompt":"กำหนด $f(x)=x^3-6x^2+9x+1$ จงหาจุดวิกฤต จำแนกเป็นจุดสูงสุด/ต่ำสุด และหาช่วงที่ฟังก์ชันเพิ่ม/ลด","model":"$f'(x)=3x^2-12x+9=3(x-1)(x-3)$ → จุดวิกฤต $x=1,3$\n$f''(x)=6x-12$\nที่ $x=1$: $f''=-6<0\\Rightarrow$ local max, $f(1)=5$\nที่ $x=3$: $f''=6>0\\Rightarrow$ local min, $f(3)=1$\nเพิ่มขึ้นบน $(-\\infty,1)\\cup(3,\\infty)$ ลดลงบน $(1,3)$"},{"title":"วิเคราะห์กราฟฟังก์ชันกำลังสี่","points":5,"prompt":"กำหนด $f(x)=x^4-4x^3$ จงหาจุดวิกฤต จุดเปลี่ยนเว้า และช่วงความเว้า","model":"$f'(x)=4x^3-12x^2=4x^2(x-3)$ → จุดวิกฤต $x=0,3$\n$f''(x)=12x^2-24x=12x(x-2)$ → จุดที่ $f''=0$: $x=0,2$\nตรวจสอบเครื่องหมาย $f''$: เว้าขึ้นบน $(-\\infty,0)$, เว้าลงบน $(0,2)$, เว้าขึ้นบน $(2,\\infty)$ → จุดเปลี่ยนเว้าที่ $x=0$ และ $x=2$\nตรวจสอบเครื่องหมาย $f'$: $f'<0$ ตลอดช่วง $x<3$ (ยกเว้นแตะ 0 ที่ $x=0$ แต่ไม่เปลี่ยนเครื่องหมาย จึงไม่ใช่จุดสูงสุด/ต่ำสุด) และ $f'>0$ เมื่อ $x>3$ → local min ที่ $x=3$, $f(3)=-27$"}],"examStatus":"ตรงจาก Assignment 1 ข้อ 7","examKind":"direct","assignmentItems":[["3.3","จาก Assignment 3.3: $\frac{d}{dx}(\\sqrt{x}\\cos(2x))$","Product Rule + Chain Rule","ต้องดิฟทั้งสอง factor"],["5.2","Assignment 5.2: $x^4+e^{x-y}=xy+1$ ที่ $(1,1)$","Implicit Differentiation + tangent/normal","ทุก $y$ เป็น function ของ $x$"]],"whatChanges":"polynomial และ interval เปลี่ยนได้ แต่ต้องตรวจ critical points, sign charts, inflection และ endpoints ครบ","cram":{"mustKnow":"f' = เพิ่ม/ลด + local extrema. f'' = เว้า. Absolute on [a,b] = critical + endpoints.","recognize":"ถ้าข้อถามหลายข้อ 7.1–7.5 ให้ทำเป็น workflow เดียว ไม่ทำแยกแบบไร้ระบบ.","steps":["หา domain","หา $f'$ และ critical numbers","สร้าง sign chart ของ f'","หา relative max/min","หา $f''$","หา candidate inflection และตรวจ sign change"],"avoid":["ลืมเช็คว่า $f''=0$ ต้อง 'เปลี่ยนเครื่องหมายจริง' ไม่ใช่ทุกจุดที่ $f''=0$ จะเป็นจุดเปลี่ยนเว้าเสมอไป","สรุป max/min ทั้งที่ $f''=0$ โดยไม่เปลี่ยนไปใช้ First Derivative Test แทน"],"writeup":"ทำตาราง sign ของ f' และ f'' จะได้คะแนนและช่วยวาดกราฟ. ตอนจบต้องรายงานเป็น 'จุด (x,y)' ไม่ใช่แค่ x ถ้าโจทย์ถามจุด.","assignment":"ตรงจาก Assignment 1 ข้อ 7"}},{"name":"Optimization — แปลงโจทย์คำพูดเป็น calculus","icon":"🏗️","lesson":{"concept":"โจทย์ประยุกต์ (กระป๋อง กล่อง รั้ว) จะมีปริมาณคงที่ 1 ตัว (constraint) และให้หาค่าที่ทำให้อีกปริมาณหนึ่ง (objective) สูงสุดหรือต่ำสุด — ขั้นตอนสำคัญที่สุดคือลดตัวแปรให้เหลือตัวเดียวก่อนหาอนุพันธ์","formulas":["ตั้ง Objective function (สิ่งที่ต้องการ max/min) และ Constraint (สิ่งที่คงที่)","ใช้ constraint แทนค่าตัวแปรหนึ่งลงในอีกตัวแปรหนึ่ง เพื่อให้ objective เหลือตัวแปรเดียว"],"method":["วาดรูป ตั้งชื่อตัวแปรให้ครบทุกตัว","เขียนสมการ constraint (สิ่งที่คงที่ เช่น ปริมาตร หรือความยาวเส้นรอบรูป)","เขียนสมการ objective (สิ่งที่ต้องการหาค่าสูงสุด/ต่ำสุด)","ใช้ constraint แทนตัวแปรหนึ่งลงใน objective ให้เหลือตัวแปรเดียว","หาอนุพันธ์ objective ตั้งเป็น 0 หาจุดวิกฤต","ยืนยันด้วย Second Derivative Test เสมอ — ข้อสอบให้คะแนนตรงขั้นตอนนี้"],"example":{"prompt":"กล่องฐานสี่เหลี่ยมจัตุรัส ไม่มีฝา ปริมาตร 32 ลบ.ซม. จงหาด้านฐาน $x$ ที่ใช้วัสดุน้อยที่สุด","solution":"$V=x^2h=32\\Rightarrow h=32/x^2$; $S=x^2+4xh=x^2+128/x$; $S'=2x-128/x^2=0\\Rightarrow x^3=64\\Rightarrow x=4$; $S''=2+256/x^3>0$ ยืนยันเป็นค่าต่ำสุด"},"pitfalls":["ลืมลดตัวแปรให้เหลือตัวเดียวก่อนหาอนุพันธ์ (หาอนุพันธ์ทั้งที่ยังมี 2 ตัวแปร)","ลืมตรวจยืนยันด้วย Second Derivative Test หรือลืมเช็คว่าคำตอบสมเหตุสมผลจริง (เช่น ความยาวต้องเป็นบวก)"],"intuition":"Optimization มีสองสมการสำคัญ: objective = สิ่งที่ต้อง maximize/minimize และ constraint = เงื่อนไขที่บังคับให้ตัวแปรสัมพันธ์กัน.","recognize":"คำว่า 'น้อยที่สุด/มากที่สุด', 'พื้นที่มากสุด', 'วัสดุน้อยสุด', 'ระยะทางสั้นสุด' → Optimization.","theory":"จากรูป เส้นสองเส้นมีความยาว x และ y จึง minimize $S=x+y$ subject to $x^2+y^2=25$, x,y>0. แก้ constraint ให้เหลือตัวแปรเดียวหรือใช้ implicit relation แล้วหา critical point. ต้องตรวจว่าเป็น minimum จริงและอยู่ใน domain.","workflow":["วาด/ตีความรูป","ตั้ง objective","ตั้ง constraint","ลดเหลือหนึ่งตัวแปร","ระบุ domain","หา derivative และ critical points","ตรวจว่าเป็น max/min","ตรวจ endpoints ถ้า domain ปิด","ตอบค่าตัวแปรและค่าที่ objective"],"deepExamples":[{"title":"ตรงกับ Assignment 8.1","prompt":"บน $x^2+y^2=25$, x,y>0 minimize $S=x+y$","solution":"เขียน $y=\\sqrt{25-x^2}$, $S=x+\\sqrt{25-x^2}$. จากนั้นตรวจ derivative และ domain $0<x<5$ รวม endpoint ตามบริบท. จุดสมมาตรให้ $x=y=5/\\sqrt2$ เป็นจุดสูงสุดของ x+y ไม่ใช่ต่ำสุด; minimum ในจตุภาคที่ 1 เข้าใกล้แกนที่ endpoint และได้ infimum 5 ถ้าอนุญาตขอบเขต. ดังนั้นต้องตีความคำว่า 'จุดบนวงกลมในจตุภาคที่ 1' ว่ารวมแกนหรือไม่ก่อนสรุป.","answer":"ต้องตรวจ domain/นิยามจตุภาค"},{"title":"Optimization พื้นฐาน","prompt":"สี่เหลี่ยมพื้นที่ $A=xy$ เมื่อ $2x+y=L$","solution":"แทน $y=L-2x$: $A=x(L-2x)$ → $A'=L-4x=0$ → $x=L/4$, $y=L/2$.","answer":"$x=L/4,y=L/2$"},{"title":"ตรวจ second derivative","prompt":"$A=x(L-2x)$","solution":"$A''=-4<0$ จึงเป็น maximum.","answer":"maximum"}],"exam":"ข้อ 8.1 สอนสำคัญเรื่อง domain: คำว่า 'จตุภาคที่ 1' บางตำราไม่รวมแกน. ต้องอ่านรูปและเงื่อนไขให้ชัดก่อนเลือก endpoint. อย่าสรุปจาก $f'=0$ อย่างเดียว.","memory":"Objective + Constraint → 1 variable → domain → derivative → verify → answer.","pattern":"Assignment 1 ข้อ 8.1 ให้จุดบนวงกลม $x^2+y^2=25$ ในจตุภาคที่ 1 และให้หาจุดที่ทำให้ผลรวมความยาวเส้นตั้งฉากกับแกน X/Y ต่ำที่สุด.","writeup":"ต้องเขียน objective และ constraint แยกกัน. นี่คือส่วนที่แสดงว่าคุณแปลงโจทย์ภาษาไทยเป็นคณิตศาสตร์ได้.","source":"เนื้อหาส่วนนี้ยึดรูปแบบโจทย์จาก Assignment 1 ภาคเรียนที่ 1/2569 เป็นหลัก ตามข้อมูลที่ผู้ใช้ระบุว่าข้อสอบยึด Assignment และเปลี่ยนตัวเลขหรือรายละเอียดเล็กน้อย","examStatus":"ตรงจาก Assignment 1 ข้อ 8.1"},"mcq":[{"q":"กระป๋องทรงกระบอกเปิดฝาบน (ไม่มีฝา) ปริมาตรคงที่ ใช้วัสดุน้อยที่สุดเมื่อใด","c":["$h=r$","$h=2r$","$h=r/2$","$h=3r$","$h=r^2$"],"a":0,"ex":"จาก $S=\\pi r^2+2V/r$ หาอนุพันธ์แล้วตั้งเป็น 0 จะได้ $h=r$ ที่จุดต่ำสุด"},{"q":"เมื่อได้จุดวิกฤตของฟังก์ชันเป้าหมาย (objective function) ต้องยืนยันว่าเป็นค่าสูงสุด/ต่ำสุดจริงด้วยวิธีใด","c":["Second Derivative Test (หรือตรวจเครื่องหมาย $f'$)","แทนค่า $x=0$","หา $f(0)$","ไม่ต้องตรวจสอบ","เปรียบเทียบกับ $f''=0$ เท่านั้น"],"a":0,"ex":"ต้องตรวจสอบด้วย Second Derivative Test หรือดูการเปลี่ยนเครื่องหมายของ $f'$ เพื่อยืนยันว่าเป็น max/min จริง"},{"q":"กระป๋องทรงกระบอกปิดสนิททั้งบนล่าง ปริมาตรคงที่ ใช้วัสดุน้อยสุดเมื่อใด","c":["$h=2r$","$h=r$","$h=r/2$","$h=4r$","$h=3r/2$"],"a":0,"ex":"จาก $S=2\\pi r^2+2V/r$ หาอนุพันธ์ตั้งเป็น 0 จะได้ $h=2r$"},{"q":"รั้วรูปสี่เหลี่ยมติดริมแม่น้ำ (ไม่ต้องกั้นด้านติดแม่น้ำ) ใช้รั้วยาวรวม $L$ พื้นที่มากสุดเมื่อด้านขนานแม่น้ำ ($y$) สัมพันธ์กับด้านตั้งฉาก ($x$) อย่างไร","c":["$y=2x$","$y=x$","$y=x/2$","$y=3x$","$y=4x$"],"a":0,"ex":"$2x+y=L$, พื้นที่ $A=xy=x(L-2x)$, $A'=L-4x=0\\Rightarrow x=L/4,y=L/2=2x$"},{"q":"กล่องฐานสี่เหลี่ยมจัตุรัสไม่มีฝา ปริมาตรคงที่ ใช้วัสดุน้อยสุดเมื่อความสูง $h$ สัมพันธ์กับด้านฐาน $x$ อย่างไร","c":["$h=x/2$","$h=x$","$h=2x$","$h=x/3$","$h=3x$"],"a":0,"ex":"$S=x^2+4xh$, $V=x^2h$ คงที่ หาอนุพันธ์ตั้งเป็น 0 จะได้ $h=x/2$"}],"essay":[{"title":"กระป๋องทรงกระบอกปิดสนิท (สไตล์ข้อสอบจริง)","points":10,"prompt":"ต้องการออกแบบกระป๋องทรงกระบอกปิดสนิททั้งฝาบนและล่าง ให้มีปริมาตร $54\\pi$ ลูกบาศก์นิ้ว จงหารัศมี $r$ และความสูง $h$ ที่ทำให้ใช้วัสดุ (พื้นที่ผิว) น้อยที่สุด","model":"พื้นที่ผิว: $S=2\\pi r^2+2\\pi rh$, ปริมาตร: $V=\\pi r^2h=54\\pi\\Rightarrow h=54/r^2$\nแทนค่า: $S(r)=2\\pi r^2+\\dfrac{108\\pi}{r}$\n$$S'(r)=4\\pi r-\\frac{108\\pi}{r^2}=0\\Rightarrow4r^3=108\\Rightarrow r^3=27\\Rightarrow r=3$$\n$h=54/9=6$\nตรวจสอบ: $S''(r)=4\\pi+216\\pi/r^3>0$ เสมอ ยืนยันเป็นค่าต่ำสุด\n**คำตอบ: $r=3$ นิ้ว, $h=6$ นิ้ว**"},{"title":"ตัดลวดแบ่งเป็นวงกลมและสี่เหลี่ยม","points":10,"prompt":"ลวดยาว 100 ซม. ถูกตัดเป็นสองท่อน ท่อนแรกดัดเป็นวงกลม อีกท่อนดัดเป็นสี่เหลี่ยมจัตุรัส จงหาว่าควรตัดที่ความยาวเท่าใด (แต่ละท่อน) จึงทำให้ผลรวมพื้นที่ทั้งสองรูปน้อยที่สุด","model":"ให้ $x$ = ความยาวท่อนที่ดัดเป็นวงกลม, $100-x$ = ท่อนสี่เหลี่ยม\nวงกลม: เส้นรอบวง $=x=2\\pi r\\Rightarrow r=x/2\\pi$, พื้นที่ $=\\pi r^2=x^2/4\\pi$\nสี่เหลี่ยม: ด้าน $=(100-x)/4$, พื้นที่ $=(100-x)^2/16$\n$$A(x)=\\frac{x^2}{4\\pi}+\\frac{(100-x)^2}{16}$$\n$$A'(x)=\\frac{x}{2\\pi}-\\frac{100-x}{8}=0$$\nคูณ 8 ตลอด: $\\dfrac{4x}{\\pi}-(100-x)=0\\Rightarrow x\\left(\\dfrac{4}{\\pi}+1\\right)=100\\Rightarrow x=\\dfrac{100\\pi}{\\pi+4}\\approx44.0$ ซม.\nท่อนสี่เหลี่ยม $=100-x\\approx56.0$ ซม.\nตรวจสอบ: $A''(x)=\\frac1{2\\pi}+\\frac18>0$ เสมอ ยืนยันเป็นค่าต่ำสุด\n**คำตอบ: ตัดวงกลม $\\approx44.0$ ซม. สี่เหลี่ยม $\\approx56.0$ ซม.**"}],"examStatus":"ตรงจาก Assignment 1 ข้อ 8.1","examKind":"direct","assignmentItems":[["4.1","กำหนด $y=u^2+1$, $u=e^{x/2}$ และ $x=\\sin t$ จงหา $\\left.\\frac{dy}{dt}\\right|_{t=\\pi}$","Chain Rule หลายชั้น: $dy/du\\cdot du/dx\\cdot dx/dt$","ต้องแทน $t=\\pi$ ท้ายสุด"]],"whatChanges":"รูปเรขาคณิตและ constraint เปลี่ยนได้ แต่ต้องแยก objective/constraint และตรวจ domain/maximum/minimum","cram":{"mustKnow":"Objective + Constraint → 1 variable → domain → derivative → verify → answer.","recognize":"คำว่า 'น้อยที่สุด/มากที่สุด', 'พื้นที่มากสุด', 'วัสดุน้อยสุด', 'ระยะทางสั้นสุด' → Optimization.","steps":["วาด/ตีความรูป","ตั้ง objective","ตั้ง constraint","ลดเหลือหนึ่งตัวแปร","ระบุ domain","หา derivative และ critical points"],"avoid":["ลืมลดตัวแปรให้เหลือตัวเดียวก่อนหาอนุพันธ์ (หาอนุพันธ์ทั้งที่ยังมี 2 ตัวแปร)","ลืมตรวจยืนยันด้วย Second Derivative Test หรือลืมเช็คว่าคำตอบสมเหตุสมผลจริง (เช่น ความยาวต้องเป็นบวก)"],"writeup":"ต้องเขียน objective และ constraint แยกกัน. นี่คือส่วนที่แสดงว่าคุณแปลงโจทย์ภาษาไทยเป็นคณิตศาสตร์ได้.","assignment":"ตรงจาก Assignment 1 ข้อ 8.1"}},{"name":"L'Hôpital + รูปกำกวม — ใช้เมื่อโจทย์อนุญาต","icon":"♾️","lesson":{"concept":"กฎโลปิตาลใช้ได้เฉพาะรูปแบบยังไม่กำหนด (indeterminate) $0/0$ หรือ $\\infty/\\infty$ เท่านั้น โดยหาอนุพันธ์เศษและส่วนแยกกัน (ไม่ใช่ Quotient Rule) แล้วลองแทนค่าใหม่ ทำซ้ำได้เรื่อย ๆ จนกว่าจะไม่ใช่รูปแบบยังไม่กำหนดแล้ว","formulas":["ถ้า $\\lim \\dfrac{f(x)}{g(x)}$ เป็น $0/0$ หรือ $\\infty/\\infty$ แล้ว $\\lim\\dfrac{f(x)}{g(x)}=\\lim\\dfrac{f'(x)}{g'(x)}$","รูป $0\\times\\infty,\\ \\infty-\\infty,\\ 0^0,\\ 1^\\infty,\\ \\infty^0$ ต้องจัดรูปให้เป็น $0/0$ หรือ $\\infty/\\infty$ ก่อนใช้กฎ"],"method":["เช็คก่อนเสมอว่าเป็น $0/0$ หรือ $\\infty/\\infty$ จริงหรือไม่ (แทนค่าตรงดูก่อน) — ห้ามใช้กฎมั่ว","หาอนุพันธ์เศษและส่วนแยกกันคนละส่วน","แทนค่าลิมิตใหม่ ถ้ายังเป็น $0/0$ หรือ $\\infty/\\infty$ ทำซ้ำขั้นตอนได้อีก","ถ้าเป็นรูป $0\\times\\infty$ ให้เขียนใหม่เป็นเศษส่วนก่อน ถ้าเป็น $1^\\infty$ หรือ $0^0$ ให้ใช้ $\\ln$ แปลงเป็นรูปคูณก่อน"],"example":{"prompt":"จงหา $\\displaystyle\\lim_{x\\to0}\\dfrac{e^{2x}-1}{x}$","solution":"แทน $x=0$ ได้ $0/0$ → หาอนุพันธ์เศษและส่วนแยกกัน: $\\lim\\dfrac{2e^{2x}}{1}=2e^0=2$"},"pitfalls":["ใช้กฎโลปิตาลกับลิมิตที่ไม่ใช่ $0/0$ หรือ $\\infty/\\infty$ — ผิดหลักการ ได้คำตอบผิด","หาอนุพันธ์เศษและส่วนรวมกันแบบ Quotient Rule แทนที่จะหาแยกกันคนละส่วน"],"intuition":"L'Hôpital ไม่ใช่สูตรลัดสำหรับทุก limit. ใช้เมื่อยืนยันรูป $0/0$ หรือ $\\infty/\\infty$ แล้วเท่านั้น; รูป $1^\\infty$, $0^0$, $\\infty^0$ ต้องแปลงก่อน.","recognize":"เห็น fraction แล้วแทนได้ $0/0$ หรือ $\\infty/\\infty$ → พิจารณา L'Hôpital. เห็น exponential form → logarithm ก่อน.","theory":"ถ้าอยู่ในเงื่อนไขของกฎและได้ $0/0$ หรือ $\\infty/\\infty$, $\\lim f/g=\\lim f'/g'$ เมื่อด้านขวาสามารถใช้ได้. สำหรับ $\\lim(1+\\sin x)^{5/x}$ ให้ตั้ง y, take ln แล้วใช้ L'Hôpital กับ $\\ln y$.","workflow":["แทนค่าเพื่อระบุรูป","ยืนยันว่าเป็น indeterminate ที่กฎใช้ได้","ดิฟ numerator และ denominator แยกกัน","ตรวจรูปใหม่","ทำซ้ำถ้ายัง 0/0 หรือ infinity/infinity","ถ้าเป็น power form ให้ take ln → หา limit ของ ln y → exponentiate"],"deepExamples":[{"title":"Assignment 8.2","prompt":"$\\displaystyle\\lim_{x\\to0^+}\\left(\\frac3x-\\frac4{e^x-1}\\right)$","solution":"รวมเป็นเศษส่วนเดียว: $[3(e^x-1)-4x]/[x(e^x-1)]$. ได้ 0/0 จึงใช้ L'Hôpital แล้วทำต่อจนได้ค่าจำกัด.","answer":"ต้องทำ algebra ก่อนแล้วค่อยใช้กฎ"},{"title":"Assignment 8.3","prompt":"$\\displaystyle\\lim_{x\\to0^+}(1+\\sin x)^{5/x}$","solution":"ให้ $y=(1+\\sin x)^{5/x}$. ln: $\\ln y=\\frac5x\\ln(1+\\sin x)$. หา limit ของ ln y แล้ว exponentiate.","answer":"รูปแบบ $1^\\infty$"},{"title":"ตัวอย่างมาตรฐาน","prompt":"$\\displaystyle\\lim_{x\\to0}\\frac{\\sin x}{x}$","solution":"เป็น 0/0; L'Hôpital → $\\cos x/1\\to1$.","answer":"1"}],"exam":"ข้อสอบชอบให้รูปที่ดูคล้ายใช้ L'Hôpital ได้แต่จริง ๆ ต้องจัดรูปก่อน. และถ้าเป็น power limit อย่าดิฟฐานกับเลขชี้กำลังตรง ๆ.","memory":"Check form → 0/0 or ∞/∞ → L'Hôpital. Power form → ln → limit → exp.","pattern":"Assignment 1 ข้อ 8.2–8.3 กลับมาใช้ limit ที่มีรูปกำกวม และต่างจากข้อ 1 ตรงที่ข้อ 1 ห้าม L'Hôpital แต่ข้อ 8 เป็นโจทย์ปลายบทที่ต้องรู้วิธีนี้.","writeup":"เขียนรูป indeterminate ก่อนใช้กฎทุกครั้ง. ถ้าทำหลายรอบให้ระบุว่า 'ยังเป็น 0/0 จึงใช้ L'Hôpital อีกครั้ง'.","source":"เนื้อหาส่วนนี้ยึดรูปแบบโจทย์จาก Assignment 1 ภาคเรียนที่ 1/2569 เป็นหลัก ตามข้อมูลที่ผู้ใช้ระบุว่าข้อสอบยึด Assignment และเปลี่ยนตัวเลขหรือรายละเอียดเล็กน้อย","examStatus":"ตรงจาก Assignment 1 ข้อ 8.2–8.3"},"mcq":[{"q":"$\\displaystyle\\lim_{x\\to0}\\frac{\\sin x}{x}$ หาโดยกฎโลปิตาล ได้เท่าใด","c":["1","0","$\\infty$","-1","1/2"],"a":0,"ex":"$\\lim_{x\\to0}\\frac{\\cos x}{1}=1$"},{"q":"$\\displaystyle\\lim_{x\\to\\infty}\\frac{\\ln x}{x}$ ได้เท่าใด","c":["0","1","$\\infty$","-1","$e$"],"a":0,"ex":"$\\lim_{x\\to\\infty}\\frac{1/x}{1}=0$"},{"q":"$\\displaystyle\\lim_{x\\to0}\\frac{e^x-1-x}{x^2}$ ได้เท่าใด (ใช้กฎโลปิตาล 2 ครั้ง)","c":["1/2","1","0","2","-1/2"],"a":0,"ex":"ครั้งที่ 1: $\\frac{e^x-1}{2x}$ ยังเป็น 0/0; ครั้งที่ 2: $\\frac{e^x}{2}\\to\\frac12$"},{"q":"$\\displaystyle\\lim_{x\\to0^+}x\\ln x$ ได้เท่าใด","c":["0","$-\\infty$","1","$\\infty$","หาค่าไม่ได้"],"a":0,"ex":"เขียนใหม่เป็น $\\frac{\\ln x}{1/x}$ (รูป $-\\infty/\\infty$) แล้วใช้กฎโลปิตาล: $\\frac{1/x}{-1/x^2}=-x\\to0$"},{"q":"กฎโลปิตาลใช้ได้กับลิมิตรูปแบบใด (indeterminate forms)","c":["$0/0$ หรือ $\\infty/\\infty$","$0\\times0$","$1/0$","$0^0$ เท่านั้น","ใช้ได้กับทุกลิมิต"],"a":0,"ex":"กฎโลปิตาลใช้ได้โดยตรงกับรูป $0/0$ และ $\\infty/\\infty$ เท่านั้น (รูปอื่นต้องจัดรูปก่อน)"}],"essay":[{"title":"กฎโลปิตาลซ้ำหลายครั้ง","points":5,"prompt":"จงหา $\\displaystyle\\lim_{x\\to0}\\frac{\\tan x-x}{x^3}$ โดยใช้กฎโลปิตาล (แสดงทุกขั้นตอน)","model":"ครั้งที่ 1: $\\dfrac{\\sec^2x-1}{3x^2}$ (ยังเป็น 0/0 เพราะ $\\sec^20-1=0$)\nครั้งที่ 2: $\\dfrac{2\\sec^2x\\tan x}{6x}$ (ยังเป็น 0/0)\nครั้งที่ 3: $\\dfrac{2[2\\sec^2x\\tan^2x+\\sec^4x]}{6}$\nแทน $x=0$: เศษ $=2[0+1]=2$, ตัวส่วน $=6$\n$$\\lim_{x\\to0}\\frac{\\tan x-x}{x^3}=\\frac26=\\frac13$$"},{"title":"รูปแบบ $\\infty\\times0$","points":5,"prompt":"จงหา $\\displaystyle\\lim_{x\\to\\infty}x^2e^{-x}$ โดยใช้กฎโลปิตาล","model":"เขียนใหม่เป็น $\\dfrac{x^2}{e^x}$ (รูป $\\infty/\\infty$)\nครั้งที่ 1: $\\dfrac{2x}{e^x}$ (ยังเป็น $\\infty/\\infty$)\nครั้งที่ 2: $\\dfrac{2}{e^x}\\to0$ เมื่อ $x\\to\\infty$\n$$\\lim_{x\\to\\infty}x^2e^{-x}=0$$"}],"examStatus":"ตรงจาก Assignment 1 ข้อ 8.2–8.3","examKind":"direct","assignmentItems":[["8.2","Assignment 8.2: $\\lim_{x\to0^+}(3/x-4/(e^x-1))$","จัดรูป → indeterminate → L'Hôpital","ต้องจัดเศษส่วนก่อน"],["8.3","Assignment 8.3: $\\lim_{x\to0^+}(1+\\sin x)^{5/x}$","$1^\\infty$ → ln → L'Hôpital/standard limit → exp","อย่าดิฟ power form ตรง ๆ"]],"whatChanges":"รูป limit เปลี่ยนได้ แต่ต้องตรวจ indeterminate form และแปลง power forms ก่อนใช้ L'Hôpital","cram":{"mustKnow":"Check form → 0/0 or ∞/∞ → L'Hôpital. Power form → ln → limit → exp.","recognize":"เห็น fraction แล้วแทนได้ $0/0$ หรือ $\\infty/\\infty$ → พิจารณา L'Hôpital. เห็น exponential form → logarithm ก่อน.","steps":["แทนค่าเพื่อระบุรูป","ยืนยันว่าเป็น indeterminate ที่กฎใช้ได้","ดิฟ numerator และ denominator แยกกัน","ตรวจรูปใหม่","ทำซ้ำถ้ายัง 0/0 หรือ infinity/infinity","ถ้าเป็น power form ให้ take ln → หา limit ของ ln y → exponentiate"],"avoid":["ใช้กฎโลปิตาลกับลิมิตที่ไม่ใช่ $0/0$ หรือ $\\infty/\\infty$ — ผิดหลักการ ได้คำตอบผิด","หาอนุพันธ์เศษและส่วนรวมกันแบบ Quotient Rule แทนที่จะหาแยกกันคนละส่วน"],"writeup":"เขียนรูป indeterminate ก่อนใช้กฎทุกครั้ง. ถ้าทำหลายรอบให้ระบุว่า 'ยังเป็น 0/0 จึงใช้ L'Hôpital อีกครั้ง'.","assignment":"ตรงจาก Assignment 1 ข้อ 8.2–8.3"}}]
+</script>
+<script>
+const stages = JSON.parse(document.getElementById('stage-data').textContent);
+
+let curStageIdx = null;
+let mcqPicked = {};
+let essayRevealed = {};
+let stageResults = {};
+let teachMode = true;
+let studyMode = 'deep';
+let lessonCollapsed = {};
+let mockAnswers = {};
+let mockSubmitted = false;
+let mockPicks = [];
+
+function latexFallbackText(value){
+  let x=String(value);
+  x=x.replace(/\\displaystyle\s*/g,'').replace(/\\text\{([^{}]*)\}/g,'$1');
+  x=x.replace(/\\left|\\right/g,'');
+  const replacements={
+    '\\infty':'∞','\\pi':'π','\\theta':'θ','\\Delta':'Δ','\\lambda':'λ','\\mu':'μ','\\sigma':'σ',
+    '\\cdot':'·','\\times':'×','\\pm':'±','\\le':'≤','\\leq':'≤','\\ge':'≥','\\geq':'≥',
+    '\\neq':'≠','\\to':'→','\\rightarrow':'→','\\leftarrow':'←','\\Rightarrow':'⇒',
+    '\\lim':'lim','\\sin':'sin','\\cos':'cos','\\tan':'tan','\\sec':'sec','\\csc':'csc','\\cot':'cot',
+    '\\ln':'ln','\\log':'log','\\exp':'exp','\\sqrt':'√','\\infty':'∞','\\partial':'∂',
+    '\\frac':'frac','\\dfrac':'frac'
+  };
+  for(const [a,b] of Object.entries(replacements)) x=x.split(a).join(b);
+  // Convert simple frac/sqrt constructs to readable text.
+  let prev='';
+  for(let i=0;i<8 && x!==prev;i++){
+    prev=x;
+    x=x.replace(/frac\{([^{}]*)\}\{([^{}]*)\}/g,'($1)/($2)');
+    x=x.replace(/√\{([^{}]*)\}/g,'√($1)');
+    x=x.replace(/\^\{([^{}]*)\}/g,'^($1)').replace(/_\{([^{}]*)\}/g,'_($1)');
+  }
+  x=x.replace(/[{}]/g,'');
+  return x;
+}
+function renderMath(container){
+  if(!container) return;
+  if(window.renderMathInElement){
+    try{
+      renderMathInElement(container, {
+        delimiters:[
+          {left:'$$', right:'$$', display:true},
+          {left:'\\[', right:'\\]', display:true},
+          {left:'$', right:'$', display:false},
+          {left:'\\(', right:'\\)', display:false}
+        ],
+        throwOnError:false,
+        strict:'ignore'
+      });
+      return;
+    }catch(err){ console.warn('KaTeX render failed; using readable fallback.',err); }
+  }
+  // Offline / CDN-failure fallback: never leave raw \frac / \sqrt / \to markup on screen.
+  const walker=document.createTreeWalker(container,NodeFilter.SHOW_TEXT);
+  const nodes=[]; let n;
+  while(n=walker.nextNode()) nodes.push(n);
+  for(const node of nodes){
+    if(!node.nodeValue || !/[\\$]/.test(node.nodeValue)) continue;
+    const text=node.nodeValue;
+    if(!/[\\](?:frac|dfrac|sqrt|lim|sin|cos|tan|ln|infty|to|pi)|\$/.test(text)) continue;
+    const parent=node.parentElement;
+    if(parent && (parent.closest('.katex') || parent.closest('.math-fallback'))) continue;
+    const span=document.createElement('span');
+    const isDisplay=text.includes('$$') || text.includes('\\[');
+    span.className=isDisplay?'math-fallback math-display':'math-fallback';
+    span.textContent=latexFallbackText(text.replace(/\$\$?/g,''));
+    node.replaceWith(span);
+  }
+}
+function toast(msg){
+  const t = document.createElement('div');
+  t.className='toast'; t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(), 2000);
+}
+
+/* ============ PROGRESS ============ */
+function updateProgress(){
+  const done = Object.keys(stageResults).length;
+  const pct = Math.round((done/stages.length)*100);
+  document.getElementById('progressFill').style.width = pct+'%';
+  document.getElementById('progressNum').textContent = `${done}/${stages.length} บท`;
+}
+
+/* ============ VIEWPORT / NAVIGATION CONTROL ============ */
+function blurActiveControl(){
+  const active=document.activeElement;
+  if(active && typeof active.blur==='function') active.blur();
+}
+function scrollTopInstant(){
+  // Intentionally do NOTHING. Route changes in this single-page app must never
+  // forcibly move the user's viewport. The browser keeps the exact scroll position.
+  return;
+}
+function scrollToElementSmooth(el){
+  if(!el) return;
+  el.scrollIntoView({behavior:'auto',block:'start'});
+}
+
+/* ============ STUDY MODES / ASSIGNMENT MAP ============ */
+function setStudyMode(mode){
+  studyMode=mode;
+  teachMode=(mode==='deep');
+  document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));
+  const el=document.getElementById(mode==='deep'?'modeDeepBtn':mode==='cram'?'modeCramBtn':'modePracticeBtn');
+  if(el) el.classList.add('active');
+  if(curStageIdx!==null && curStageIdx!=='mock'){
+    renderStage({preserveScroll:true});
+    return;
+  }
+  if(mode==='deep') renderSelect();
+  else if(mode==='cram') showCramAll();
+  else showPracticeAll();
+}
+function syncModeButtons(){
+  ['deep','cram','practice'].forEach(mode=>{
+    const id=mode==='deep'?'modeDeepBtn':mode==='cram'?'modeCramBtn':'modePracticeBtn';
+    document.getElementById(id)?.classList.toggle('active',studyMode===mode);
+  });
+}
+function assignmentMapHTML(){
+  const groups=[
+    ['1','Limits','1.1–1.6','ลิมิต 6 pattern · ห้าม L\'Hôpital',[0]],
+    ['2','Continuity + Definition','2.1–2.2','ต่อเนื่อง + derivative by definition',[1,2]],
+    ['3','Derivative Toolkit','3.1–3.10','rules, chain, logs, hyperbolic, higher derivative',[3,5,4]],
+    ['4','Parametric','4.1–4.2','$dy/dt$, $dy/dx$, $d^2y/dx^2$',[4,8]],
+    ['5','Log + Implicit','5.1–5.2','log differentiation + tangent/normal',[6,7]],
+    ['6','Approx / Error / Rates','6.1–6.3','linear, error, related rates',[10,9]],
+    ['7','Curve Analysis','7.1–7.5','critical, extrema, inflection, graph, absolute',[11]],
+    ['8','Optimization + L\'Hôpital','8.1–8.3','optimization + two limit patterns',[12,13]]
+  ];
+  return `<section class="assignment-map" id="assignmentMap"><div class="exam-map-kicker">8 ASSIGNMENT QUESTIONS → EXAM TRAINING</div><h2 style="margin:0 0 4px">Assignment Map</h2><p class="source-note"><b>หลักการ:</b> ใช้ Assignment เป็นแม่แบบ. กดแต่ละข้อเพื่อเข้าบทหลัก และบทที่เกี่ยวข้องจะถูกระบุไว้ให้ตามต่อได้ครบ.</p><div class="assignment-map-grid">${groups.map((g,i)=>`<button class="assignment-card" type="button" onclick="jumpToStage(${g[4][0]})"><div class="a-top"><span class="a-num">ข้อ ${g[0]}</span><span class="a-count">${g[2]}</span></div><h4>${g[1]}</h4><p>${g[3]}</p><p class="related-chapters"><b>บทที่เกี่ยวข้อง:</b> ${g[4].map(n=>String(n+1).padStart(2,'0')).join(' · ')}</p></button>`).join('')}</div></section>`;
+}
+function showAssignmentMap(){
+  curStageIdx=null; const app=document.getElementById('app');
+  stableSetApp(app, assignmentMapHTML()+`<div class="nav-row"><button class="btn secondary" onclick="renderSelect()">← กลับบทเรียน</button></div>`);
+  renderMath(app); scrollTopInstant();
+}
+function jumpToStage(idx){ startStage(idx); }
+function cramHTML(s){
+  const c=s.cram||{};
+  return `<section class="cram-panel"><div class="exam-map-kicker">⚡ CRAM MODE · 30-SECOND RECALL</div><h2 style="margin:0 0 5px">${s.name}</h2><div class="source-note">${c.assignment||''}</div><div class="cram-grid"><div class="cram-box"><h4>ต้องจำ</h4><p>${c.mustKnow||'-'}</p></div><div class="cram-box"><h4>เห็นแบบนี้ → คิดถึงสิ่งนี้</h4><p>${c.recognize||'-'}</p></div><div class="cram-box"><h4>ขั้นตอน</h4><ul>${(c.steps||[]).map(x=>`<li>${x}</li>`).join('')}</ul></div><div class="cram-box"><h4>ห้ามพลาด</h4><ul>${(c.avoid||[]).map(x=>`<li>${x}</li>`).join('')}</ul></div></div><div class="what-changes"><b>ถ้าข้อสอบเปลี่ยนเลข:</b> ${s.whatChanges||'โครงวิธีทำยังคงเดิม ให้จับ pattern ก่อนตัวเลข'}</div><div class="lesson-writeup"><strong>✍️ วิธีเขียนส่ง:</strong> ${c.writeup||'-'}</div></section>`;
+}
+function patternHTML(s){
+  const items=s.assignmentItems||[]; const examples=s.lesson?.deepExamples||[];
+  return `<section class="assignment-detail"><div class="exam-map-kicker">PATTERN DRILL</div><h2 style="margin:0 0 5px">โจทย์ต้นแบบ → สิ่งที่ต้องจับให้ได้</h2><p class="source-note"><b>โจทย์ต้นแบบ:</b> มาจาก Assignment ที่แนบมา. <b>โจทย์ฝึกเพิ่ม:</b> เป็นตัวอย่างฝึกที่เปลี่ยนตัวเลข/รายละเอียดเพื่อให้จับวิธีทำ ไม่ใช่ข้อสอบจริง.</p>${items.map(a=>`<div class="assignment-item"><div class="a-label">ASSIGNMENT ${a[0]}</div><p>${a[1]}</p><small><b>วิธีคิด:</b> ${a[2]}<br><b>จุดระวัง:</b> ${a[3]}</small></div>`).join('')}<div class="lesson-sub">โจทย์ฝึกเพิ่มจาก pattern เดียวกัน</div><div class="pattern-grid">${examples.slice(0,6).map((e,i)=>`<div class="pattern-card"><h5>Variant ${i+1}</h5><p>${e.prompt}</p><p style="margin-top:7px;color:var(--cyan-lt)">${e.answer}</p></div>`).join('')}</div></section>`;
+}
+function showCramAll(){
+  curStageIdx=null; const app=document.getElementById('app');
+  stableSetApp(app, `<button class="back-link back-button" type="button" onclick="renderSelect()">← กลับหน้ารายการบท</button><h2>⚡ Cram Mode — 30 นาทีสุดท้าย</h2><p class="section-note">อ่านแต่ละกล่องให้ครบ: ต้องจำ → เห็น pattern → ขั้นตอน → ห้ามพลาด → วิธีเขียน.</p>`+stages.map((s,i)=>`<div id="cramAll${i}">${cramHTML(s)}</div>`).join(''));
+  renderMath(app); scrollTopInstant();
+}
+function showPracticeAll(){
+  curStageIdx=null;
+  const app=document.getElementById('app');
+  let html=`<button class="back-link back-button" type="button" onclick="renderSelect()">← กลับหน้ารายการบท</button><h2>📝 Practice — ฝึกตาม Assignment Pattern</h2><p class="section-note">เลือกบทเพื่อทำโจทย์ปรนัยและอัตนัยของบทนั้น. เฉลยจะเปิดหลังเลือกคำตอบหรือกดดูเฉลยอัตนัย.</p><div class="assignment-map-grid">`;
+  stages.forEach((s,i)=>{ html+=`<button class="assignment-card practice-card" type="button" onclick="startStage(${i})"><div class="a-top"><span class="a-num">บท ${String(i+1).padStart(2,'0')}</span><span class="a-count">${s.mcq.length} MCQ · ${s.essay.length} Essay</span></div><h4>${s.name}</h4><p>${s.examStatus||'อิง Assignment 1'}</p></button>`; });
+  html+=`</div>`;
+  stableSetApp(app, html); renderMath(app); scrollTopInstant();
+}
+function startMockExam(){
+  curStageIdx='mock'; mockAnswers={}; mockSubmitted=false; mockPicks=stages.map((s,i)=>({stage:i,qIndex:Math.floor(Math.random()*s.mcq.length)})); renderMockExam(); scrollTopInstant();
+}
+function renderMockExam(){
+  const app=document.getElementById('app');
+  const picks=(mockPicks.length?mockPicks:stages.map((s,i)=>({stage:i,qIndex:0}))).map(p=>({stage:p.stage,q:stages[p.stage].mcq[p.qIndex]}));
+  let html=`<button class="back-link back-button" type="button" onclick="renderSelect()">← กลับหน้ารายการบท</button><h2>🔥 จำลองสอบ 14 ข้อ</h2><p class="section-note">สุ่มจาก pattern ที่มีในแต่ละบท 1 ข้อ/บท. จุดประสงค์คือเช็คว่าเห็นโจทย์แล้วเลือกวิธีทำได้หรือยัง.</p><div class="mock-wrap">`;
+  if(mockSubmitted){let score=0;picks.forEach((p,i)=>{if(mockAnswers[i]===p.q.a)score++;});html+=`<div class="mock-score">คะแนน ${score}/${picks.length} · ${Math.round(score/picks.length*100)}%</div>`;}
+  picks.forEach((p,i)=>{html+=`<div class="mock-q"><h4>ข้อ ${i+1} · ${stages[p.stage].name}</h4><p class="qtext">${p.q.q}</p><div class="choices">${p.q.c.map((c,ci)=>`<label><input type="radio" name="mock${i}" ${mockAnswers[i]===ci?'checked':''} onclick="mockAnswers[${i}]=${ci}"> ${['ก','ข','ค','ง','จ'][ci]}. ${c}</label>`).join('')}</div>${mockSubmitted?`<div class="mcq-explain show"><b>เฉลย:</b> ${p.q.ex}</div>`:''}</div>`;});
+  html+=`<div class="nav-row"><button class="btn" onclick="submitMockExam()">${mockSubmitted?'ตรวจอีกครั้ง':'ส่งคำตอบ'}</button><button class="btn secondary" onclick="startMockExam()">เริ่มชุดใหม่</button></div></div>`;
+  stableSetApp(app, html); renderMath(app);
+}
+function submitMockExam(){
+  const picks=(mockPicks.length?mockPicks:stages.map((s,i)=>({stage:i,qIndex:0}))).map(p=>({stage:p.stage,q:stages[p.stage].mcq[p.qIndex]}));
+  const unanswered=picks.filter((_,i)=>mockAnswers[i]===undefined).length;
+  if(unanswered){ toast(`ยังไม่ได้ตอบ ${unanswered} ข้อ`); return; }
+  mockSubmitted=true;
+  renderMockExam();
+}
+
+/* ============ CHAPTER LIST ============ */
+function stableSetApp(app, html){
+  // Native scrolling is intentionally left alone. Replacing the contents of #app
+  // must never call scrollTo(), lock overscroll, or fight the mouse wheel/touch.
+  // Capture only the current viewport as a diagnostic value; do not force it back.
+  app.classList.add('view-swapping');
+  app.innerHTML = html;
+  requestAnimationFrame(()=>{
+    app.classList.remove('view-swapping');
+    renderMath(app);
+  });
+}
+
+
+function renderSelect(){
+  curStageIdx = null; syncModeButtons();
+  const app = document.getElementById('app');
+  let html = assignmentMapHTML();
+  html += `<div class="chapter-list">`;
+  stages.forEach((st, idx) => {
+    const res = stageResults[idx];
+    html += `<div class="chapter-row">
+      <div class="chapter-idx mono">${String(idx+1).padStart(2,'0')}</div>
+      <div class="chapter-main">
+        <h3>${st.name}</h3>
+        <p class="chapter-meta">Assignment: ${st.examStatus||'ดู Pattern'} · ปรนัย ${st.mcq.length} · อัตนัย ${st.essay.length}</p>
+        <div class="exam-badge ${st.examKind||'direct'}">${st.examStatus||'อิงจาก Assignment 1'}</div>
+        ${res ? `<div class="chapter-score">ล่าสุด: ${res.correct}/${res.total} (${Math.round(res.correct/res.total*100)}%)</div>` : ''}
+      </div>
+      <div class="chapter-action"><button class="btn ${res ? 'secondary' : ''}" onclick="startStage(${idx})">${res ? 'ทบทวนอีกครั้ง' : 'เรียน + ฝึก'}</button></div>
+    </div>`;
+  });
+  html += `</div>`;
+  stableSetApp(app, html); updateProgress(); renderMath(app);
+} 
+
+/* ============ LESSON RENDER ============ */
+function lessonHTML(s, idx){
+  const l=s.lesson||{};
+  if(!teachMode) return `<div class="lesson-off-card"><div><span class="lesson-tag">DEEP TEACH</span><strong>โหมดสอนละเอียดถูกปิดไว้</strong><p>กด Deep Teach เพื่อเรียนตั้งแต่การอ่านโจทย์ → วิธีเลือกสูตร → ทำ Assignment pattern → เขียนคำตอบ.</p></div><button class="btn secondary lesson-open-btn" type="button" onclick="enableTeachMode(${idx})">เปิด Deep Teach</button></div>`;
+  const collapsed=lessonCollapsed[idx] ? 'collapsed' : ''; const expanded=!lessonCollapsed[idx];
+  return `<section class="lesson-box ${collapsed}" id="lessonBox" aria-label="บทสอนละเอียด">
+    <div class="lesson-head"><div class="lesson-head-title"><span class="lesson-tag">DEEP TEACH</span><div><h4>เรียนจากศูนย์ → ทำ Assignment Pattern → รับมือเลขที่เปลี่ยน</h4><p>ไม่ใช่แค่สูตร: ต้องรู้ว่าโจทย์กำลังถามอะไร, เลือกวิธีไหน และเขียนอย่างไร</p></div></div><button class="lesson-collapse-btn" type="button" onclick="toggleLesson(${idx})" aria-expanded="${expanded}" aria-controls="lessonBody"><span class="lesson-btn-label">${expanded?'ย่อบทสอน':'เปิดบทสอน'}</span><span class="lesson-chevron" aria-hidden="true">▾</span></button></div>
+    <div class="lesson-body" id="lessonBody" ${expanded?'':'hidden'}>
+      <div class="lesson-focus"><b>${l.examStatus||'อิง Assignment 1'}</b><br><span>${l.pattern||''}</span></div>
+      <div class="lesson-source"><strong>🎯 โจทย์กำลังทดสอบอะไร?</strong><br>${l.intuition||l.concept||''}</div>
+      <div class="lesson-sub">1) แก่นของบทนี้ — ต้องเข้าใจก่อนจำสูตร</div><div class="lesson-theory">${l.theory||''}</div>
+      <div class="lesson-sub">2) เห็นโจทย์แบบไหน → ต้องนึกถึงอะไร</div><div class="lesson-recognize">${l.recognize||''}</div>
+      <div class="lesson-sub">3) Assignment Pattern ที่ต้องทำให้ได้</div>${patternHTML(s)}
+      <div class="lesson-sub">4) สูตร / หลักการสำคัญ</div><ul class="formula-list">${(l.formulas||[]).map(f=>`<li>${f}</li>`).join('')}</ul>
+      <div class="lesson-sub">5) Algorithm — ขั้นตอนทำโจทย์</div><ol class="method-list">${(l.workflow||l.method||[]).map(x=>`<li>${x}</li>`).join('')}</ol>
+      <div class="lesson-sub">6) ตัวอย่างหลัก — ทำให้ดูแบบส่งงาน</div><div class="worked-example"><p class="ex-prompt">${l.example?.prompt||''}</p><p class="ex-solution">${l.example?.solution||''}</p></div>
+      <div class="lesson-sub">7) ตัวอย่างเพิ่ม — จงจับ “วิธี” ไม่ใช่จำตัวเลข</div>${(l.deepExamples||[]).map((e,i)=>`<div class="deep-example"><h5>${e.title||'Variant '+(i+1)}</h5><p class="deep-prompt">${e.prompt}</p><p class="deep-solution">${e.solution}</p><div class="deep-answer">สรุปคำตอบ: ${e.answer}</div></div>`).join('')}
+      <div class="lesson-sub">8) ถ้าข้อสอบเปลี่ยนเลข / เปลี่ยนรายละเอียด</div><div class="what-changes"><b>โครงที่ไม่เปลี่ยน:</b> ${s.whatChanges||'-'}</div>
+      <div class="lesson-sub">9) จุดที่มักพลาด</div><ul class="pitfall-list">${(l.pitfalls||[]).map(x=>`<li>${x}</li>`).join('')}</ul>
+      <div class="lesson-sub">10) ข้อสอบชอบหลอกตรงไหน</div><div class="lesson-exam">${l.exam||''}</div>
+      <div class="lesson-sub">11) ✍️ วิธีเขียนคำตอบให้เห็นวิธีคิด</div><div class="lesson-writeup">${l.writeup||'เขียนสูตร/หลักการ → แทนค่า → จัดรูปทุกขั้น → สรุปคำตอบพร้อมหน่วยหรือเหตุผล'}</div>
+      <div class="lesson-sub">12) ⚡ สูตรจำ 10 วินาทีก่อนสอบ</div><div class="lesson-memory">${l.memory||''}</div>
+      <div class="lesson-footer-actions"><button class="btn ghost" type="button" onclick="collapseLesson(${idx})">ย่อบทสอน ↑</button><button class="btn secondary" type="button" onclick="scrollToElementSmooth(document.getElementById('lessonBox'))">กลับหัวข้อสอน</button></div>
+    </div>
+  </section>`;
+}
+function syncTeachButton(){
+  const btn=document.getElementById('teachToggleBtn');
+  const sw=document.getElementById('teachSwitch');
+  const state=document.getElementById('teachState');
+  if(btn) btn.setAttribute('aria-pressed', String(teachMode));
+  if(sw) sw.classList.toggle('on', teachMode);
+  if(state) state.textContent=teachMode?'เปิด':'ปิด';
+}
+function toggleTeachMode(){ setStudyMode(teachMode?'practice':'deep'); }
+function enableTeachMode(idx){
+  teachMode=true;
+  curStageIdx=idx;
+  lessonCollapsed[idx]=false;
+  syncTeachButton();
+  renderStage({preserveScroll:true});
+}
+function toggleLesson(idx){
+  const next=!lessonCollapsed[idx]; lessonCollapsed[idx]=next;
+  const box=document.getElementById('lessonBox'); const body=document.getElementById('lessonBody'); const btn=box?.querySelector('.lesson-collapse-btn');
+  if(box) box.classList.toggle('collapsed',next); if(body) body.hidden=next;
+  if(btn){btn.setAttribute('aria-expanded',String(!next)); const lab=btn.querySelector('.lesson-btn-label'); if(lab) lab.textContent=next?'เปิดบทสอน':'ย่อบทสอน';}
+}
+function collapseLesson(idx){
+  lessonCollapsed[idx]=true;
+  const box=document.getElementById('lessonBox'); const body=document.getElementById('lessonBody'); const btn=box?.querySelector('.lesson-collapse-btn');
+  if(box) box.classList.add('collapsed'); if(body) body.hidden=true; if(btn){btn.setAttribute('aria-expanded','false'); const lab=btn.querySelector('.lesson-btn-label'); if(lab) lab.textContent='เปิดบทสอน';}
+}
+
+/* ============ STAGE VIEW ============ */
+function startStage(idx){
+  curStageIdx=idx; mcqPicked={}; essayRevealed={};
+  if(!(idx in lessonCollapsed)) lessonCollapsed[idx]=false;
+  syncModeButtons(); renderStage(); scrollTopInstant();
+}
+function renderStage(options={}){
+  const preserveScroll=false;
+  const st=stages[curStageIdx]; const idx=curStageIdx; const app=document.getElementById('app');
+  let html=`<button class="back-link back-button" type="button" onclick="renderSelect()">← กลับหน้ารายการบท</button><h2>${st.name}</h2>`;
+  html+=`<div class="mode-switcher" style="margin:0 0 14px"><button class="mode-btn ${studyMode==='deep'?'active':''}" onclick="setStudyMode('deep')">📖 Deep Teach</button><button class="mode-btn ${studyMode==='cram'?'active':''}" onclick="setStudyMode('cram')">⚡ Cram</button><button class="mode-btn ${studyMode==='practice'?'active':''}" onclick="setStudyMode('practice')">📝 Practice</button></div>`;
+  if(studyMode==='deep') html+=lessonHTML(st,idx);
+  if(studyMode==='cram') html+=cramHTML(st)+patternHTML(st);
+  html+=`<h2>แบบฝึกหัดปรนัย (${st.mcq.length} ข้อ)</h2><p class="section-note">ทำหลังจากอ่าน pattern แล้ว. เป้าหมายไม่ใช่จำคำตอบ แต่เลือกวิธีทำให้ถูก.</p>`;
+  const letters=['ก','ข','ค','ง','จ'];
+  st.mcq.forEach((q,qi)=>{html+=`<div class="question" id="mq${qi}"><p class="qtext">${qi+1}. ${q.q}</p><div class="choices" id="mc${qi}">${q.c.map((choice,ci)=>`<label id="mc${qi}-${ci}"><input type="radio" name="mq${qi}" value="${ci}" onclick="pickMcq(${qi},${ci})"> ${letters[ci]}. ${choice}</label>`).join('')}</div><div class="mcq-explain" id="mex${qi}"><b>เฉลยละเอียด:</b> ${q.ex||''}</div></div>`});
+  html+=`<h2>แบบฝึกหัดอัตนัย (${st.essay.length} ข้อ)</h2><p class="section-note">เขียนวิธีทำเองก่อนดูเฉลย. ให้ถือว่ากำลังซ้อมเขียนคำตอบแบบ Assignment.</p>`;
+  st.essay.forEach((e,ei)=>{html+=`<div class="question essay"><p class="qtext points">ข้อ ${ei+1} (${e.points} คะแนน) — ${e.title}</p><p style="white-space:pre-wrap;line-height:1.7;color:var(--text-dim);">${e.prompt}</p><textarea placeholder="เขียนคำตอบ/แนวคิดของคุณที่นี่ก่อนดูเฉลย..."></textarea><div style="margin-top:8px"><button class="btn secondary" onclick="revealEssay(${ei})">ดูเฉลยละเอียด</button></div><div class="answer-key" id="ek${ei}"><b>เฉลย:</b><br>${e.model}</div></div>`});
+  html+=`<div class="stage-finish"><div><strong>ทำปรนัยครบแล้ว?</strong><p>กดส่งบทเพื่อบันทึกคะแนนล่าสุดและดูว่าควรกลับไปทบทวนหรือไปบทถัดไป.</p></div><button class="btn" onclick="finishStage()">ตรวจคะแนนบทนี้ →</button></div>`;
+  html+=`<div class="nav-row"><button class="btn ghost" onclick="renderSelect()">← กลับบททั้งหมด</button>${idx>0?`<button class="btn secondary" onclick="startStage(${idx-1})">← บทก่อนหน้า</button>`:''}${idx<stages.length-1?`<button class="btn" onclick="startStage(${idx+1})">บทถัดไป →</button>`:''}</div>`;
+  stableSetApp(app, html); syncModeButtons();
+}
+function pickMcq(qi, ci){
+  if(mcqPicked[qi] !== undefined) return;
+  const s = stages[curStageIdx];
+  const q = s.mcq[qi];
+  const correct = (ci === q.a);
+  mcqPicked[qi] = ci;
+
+  const choicesBox = document.getElementById('mc'+qi);
+  choicesBox.classList.add('locked');
+  q.c.forEach((_, idx) => {
+    const lbl = document.getElementById('mc'+qi+'-'+idx);
+    const input = lbl.querySelector('input');
+    input.disabled = true;
+    if(idx === q.a) lbl.classList.add('pick-correct');
+    if(idx === ci && ci !== q.a) lbl.classList.add('pick-wrong');
+  });
+  const box = document.getElementById('mq'+qi);
+  box.classList.add(correct ? 'correct' : 'wrong');
+  renderMath(document.getElementById('mex'+qi).parentElement);
+}
+function revealEssay(ei){
+  const el = document.getElementById('ek'+ei);
+  const wasHidden = el.style.display !== 'block';
+  el.style.display = wasHidden ? 'block' : 'none';
+  if(wasHidden){
+    renderMath(el);
+    essayRevealed[ei] = true;
+  }
+}
+function finishStage(){
+  const s = stages[curStageIdx];
+  const total = s.mcq.length;
+  const answered = Object.keys(mcqPicked).length;
+  if(answered < total){
+    toast(`ยังไม่ได้ตอบ ${total-answered} ข้อ`);
+    return;
+  }
+  const correct = s.mcq.reduce((sum,q,qi) => sum + (mcqPicked[qi]===q.a?1:0), 0);
+  stageResults[curStageIdx] = {correct, total};
+  renderResult(correct, total);
+  scrollTopInstant();
+}
+function renderResult(correct, total){
+  const app = document.getElementById('app');
+  const s = stages[curStageIdx];
+  const pct = Math.round((correct/total)*100);
+  const answered = Object.keys(mcqPicked).length;
+  let msg = pct>=90 ? 'แม่นมาก บทนี้พร้อมสำหรับข้อสอบจริงแล้ว ไปบทถัดไปได้เลย' :
+            pct>=70 ? 'อยู่ในเกณฑ์ดี กลับไปดูข้อที่พลาดในเฉลยละเอียดอีกรอบก่อนไปบทถัดไป' :
+            pct>=50 ? 'พอใช้ได้ แนะนำให้เปิดโหมดสอนละเอียดแล้วอ่านบทเรียนอีกรอบก่อนลองใหม่' :
+            'ยังไม่แม่นพอ กลับไปอ่านบทเรียนช้า ๆ ทีละขั้นตอนแล้วลองทำใหม่ ยังมีเวลาทบทวนก่อนสอบ';
+  stableSetApp(app, `
+    <div class="result-hero">
+      <div class="result-title">${s.name} — สรุปผล</div>
+      <div class="result-score">ปรนัยถูก ${correct}/${total} ข้อ (${pct}%) จากที่ตอบ ${answered}/${total} ข้อ</div>
+      <p class="result-msg">${msg}</p>
+      <div class="nav-row">
+        <button class="btn secondary" onclick="startStage(${curStageIdx})">ทำบทนี้ซ้ำ</button>
+        ${curStageIdx < stages.length-1 ? `<button class="btn" onclick="startStage(${curStageIdx+1})">ไปบทถัดไป &rarr;</button>` : ''}
+        <button class="btn ghost" onclick="renderSelect()">กลับหน้ารายการบท</button>
+      </div>
+    </div>
+  `);
+  updateProgress();
+}
+
+
+/* ============ HUD INTERACTION ============ */
+document.addEventListener('pointerdown', function(e){
+  const btn=e.target.closest('button.btn,button.mode-btn,button.lesson-collapse-btn,button.assignment-card,button.practice-card');
+  if(!btn || btn.disabled) return;
+  const rect=btn.getBoundingClientRect();
+  const size=Math.max(rect.width,rect.height)*.35;
+  const ripple=document.createElement('span');
+  ripple.className='ripple';
+  ripple.style.width=ripple.style.height=size+'px';
+  ripple.style.left=(e.clientX-rect.left-size/2)+'px';
+  ripple.style.top=(e.clientY-rect.top-size/2)+'px';
+  btn.appendChild(ripple);
+  ripple.addEventListener('animationend',()=>ripple.remove(),{once:true});
+});
+
+/* ============ INIT ============ */
+syncTeachButton();
+renderSelect();
+</script>
+<div class="source-note" style="margin-top:24px;text-align:center"><b>Source basis:</b> Assignment 1, Engineering Mathematics I, 1/2569. โจทย์ต้นแบบในระบบแยกจากโจทย์ฝึกเพิ่มเติมอย่างชัดเจน.</div>
+<script>document.title="NORM E.MATH I";</script>
+</body>
+</html>
